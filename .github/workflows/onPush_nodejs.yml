@@ -15,4 +15,5 @@ jobs:
         node-version: 10.x
     - name: npm run validate
       run: |
-        npm run validate validate
+        npm ci
+        npm run validate
