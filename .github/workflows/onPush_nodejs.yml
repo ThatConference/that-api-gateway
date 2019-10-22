@@ -15,5 +15,7 @@ jobs:
         node-version: 10.x
     - name: npm run validate
       run: |
+        # TODO: sent env for CI
+        touch .env
         npm ci
         npm run validate
