@@ -8,7 +8,7 @@
   },
   "scripts": {
     "build": "rimraf __build__ && babel ./src -d ./__build__ --copy-files --ignore ./**/__tests__",
-    "after:build:copy:folders": "cp -R functions public __build__",
+    "after:build:copy:folders": "cp -R functions __build__",
     "after:build:copy:files": "cp firebase.json .env package.json package-lock.json __build__",
     "postbuild": "concurrently npm:after:build:*",
     "predeploy:local": "npm run build",
