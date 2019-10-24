@@ -27,11 +27,22 @@ class AuthenticatedDataSource extends RemoteGraphQLDataSource {
 const createGateway = userContext =>
   new ApolloGateway({
     serviceList: [
-      // todo: configure your federated services here.
       {
-        name: 'templateGraphService',
-        url: process.env.TEMPLATE_GRAPH_SERVICE,
+        name: 'Events',
+        url: process.env.THAT_API_EVENTS,
       }, // port: 8001
+      {
+        name: 'Partners',
+        url: process.env.THAT_API_PARTNERS,
+      }, // port: 8002
+      {
+        name: 'Sessions',
+        url: process.env.THAT_API_SESSIONS,
+      }, // port: 8003
+      {
+        name: 'Members',
+        url: process.env.THAT_API_MEMBERS,
+      }, // port: 8004
     ],
 
     buildService({ name, url }) {
