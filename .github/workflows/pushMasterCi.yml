@@ -43,6 +43,16 @@ jobs:
         uses: actions/download-artifact@master
         with:
           name: tc-api
+      - name: Adjust files for FireBase
+        run: |
+          mkdir public
+          cd ./tc-api
+          mkdir -p functions/gateway
+          mv graphql functions/gateway/graphql
+          mv index.js functions/gateway/index.js
+          mv package.json functions/package.json
+          mv package-lock.json functions/package-lock.json
+          mv .env functions/.env
       - name: Checks and verifications
         run: |
             echo $GITHUB_SHA
