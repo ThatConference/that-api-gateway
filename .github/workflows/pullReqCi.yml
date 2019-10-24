@@ -1,0 +1,26 @@
+# Node Build and Validate on Pull Request
+name: PullReq CI
+
+on:
+  pull_request:
+    
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout PR
+      uses: actions/checkout@master
+    - name: Use Node.js 10.x
+      uses: actions/setup-node@master
+      with:
+        node-version: 10.x
+    - name: npm ci, run validate
+      run: |
+        # TODO: set env for CI
+        cp ./.env.sample .env
+        npm ci
+        npm run validate
+      env:
+        CI: true
