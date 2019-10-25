@@ -9,13 +9,12 @@ import uuid from 'uuid/v4';
 import apolloServer from './graphql';
 
 const api = connect();
+Sentry.init({
+  dsn: process.env.SENTRY_DSN,
+  environment: process.env.THAT_ENVIRONMENT,
+});
 
-const useSentry = async (req, res, next) => {
-  Sentry.init({
-    dsn: process.env.SENTRY_DSN,
-    environment: process.env.THAT_ENVIRONMENT,
-  });
-
+const markSentry = (req, res, next) => {
   Sentry.addBreadcrumb({
     category: 'api',
     message: 'Gateway Init',
@@ -57,7 +56,7 @@ const createUserContext = (req, res, next) => {
  * @param {string} res - http response
  *
  */
-const apiHandler = async (req, res) => {
+const apiHandler = (req, res) => {
   try {
     const graphServer = apolloServer(req.userContext);
 
@@ -87,6 +86,6 @@ const apiHandler = async (req, res) => {
  */
 export const graphEndpoint = api
   .use(responseTime())
-  .use(useSentry)
+  .use(markSentry)
   .use(createUserContext)
   .use(apiHandler);
