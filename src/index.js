@@ -14,7 +14,6 @@ const useSentry = async (req, res, next) => {
   Sentry.init({
     dsn: process.env.SENTRY_DSN,
     environment: process.env.THAT_ENVIRONMENT,
-    debug: true,
   });
 
   Sentry.addBreadcrumb({
