@@ -39,11 +39,12 @@ jobs:
         uses: actions/download-artifact@master
         with:
           name: tc-api
-      - name: Adjust files for FireBase
+      - name: Adjust files for FireBase and env
         run: |
           cd ./tc-api
           mkdir public
           mkdir -p functions/gateway
+          echo ${{ secrets.ENV_FILE_PROD }} > .env
           mv graphql functions/gateway/graphql
           mv index.js functions/gateway/index.js
           mv package.json functions/package.json
