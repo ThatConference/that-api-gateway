@@ -62,6 +62,7 @@ const createServer = userContext =>
   new ApolloServer({
     gateway: createGateway(userContext),
     subscriptions: false,
+    introspection: JSON.parse(process.env.ENABLE_GRAPH_INTROSPECTION || false),
     playground: JSON.parse(process.env.ENABLE_GRAPH_PLAYGROUND)
       ? { endpoint: '/' }
       : false,
