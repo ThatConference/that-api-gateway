@@ -55,6 +55,14 @@ jobs:
             echo $GITHUB_REF
             echo $PWD
             ls -lasiR
+      - name: Use Node.js 10.x
+        uses: actions/setup-node@master
+        with:
+          node-version: 10.x
+      - name: Load node modules for Firebase
+        run: |
+          cd tc-api/functions
+          npm i
       - name: Deploy to Firebase
         uses: w9jds/firebase-action@master
         with:
