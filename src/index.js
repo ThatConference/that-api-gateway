@@ -59,17 +59,17 @@ const createUserContext = (req, res, next) => {
  *
  */
 const apiHandler = async (req, res) => {
-  const graphServer = apolloServer(req.userContext);
-
-  // todo: set CORS up accordingly
-  const graphApi = graphServer.createHandler({
-    cors: {
-      origin: '*',
-      credentials: true,
-    },
-  });
-
   try {
+    const graphServer = apolloServer(req.userContext);
+
+    // todo: set CORS up accordingly
+    const graphApi = graphServer.createHandler({
+      cors: {
+        origin: '*',
+        credentials: true,
+      },
+    });
+
     graphApi(req, res);
   } catch (e) {
     Sentry.captureException(e);
