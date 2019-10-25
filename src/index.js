@@ -59,7 +59,6 @@ const createUserContext = (req, res, next) => {
  */
 const apiHandler = async (req, res) => {
   try {
-    console.log('creating server');
     const graphServer = apolloServer(req.userContext);
 
     // todo: set CORS up accordingly
@@ -70,10 +69,8 @@ const apiHandler = async (req, res) => {
       },
     });
 
-    console.log('calling handler');
     graphApi(req, res);
   } catch (e) {
-    console.log('root error handler');
     Sentry.captureException(e);
     res
       .set('Content-Type', 'application/json')

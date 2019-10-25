@@ -67,7 +67,6 @@ const createServer = userContext =>
       : false,
 
     formatError: err => {
-      console.log('in format error');
       userContext.sentry.captureException(err);
       return err;
     },
