@@ -3,11 +3,27 @@
 import 'dotenv/config';
 import connect from 'connect';
 import responseTime from 'response-time';
+import * as Sentry from '@sentry/node';
 import uuid from 'uuid/v4';
 
 import apolloServer from './graphql';
 
 const api = connect();
+
+const useSentry = async (req, res, next) => {
+  Sentry.init({
+    dsn: process.env.SENTRY_DSN,
+    environment: process.env.THAT_ENVIRONMENT,
+    debug: true,
+  });
+
+  Sentry.addBreadcrumb({
+    category: 'api',
+    message: 'Gateway Init',
+    level: Sentry.Severity.Info,
+  });
+  next();
+};
 
 /**
  * http middleware function
@@ -27,6 +43,7 @@ const createUserContext = (req, res, next) => {
     correlationId: req.headers['correlation-id']
       ? req.headers['correlation-id']
       : uuid(),
+    sentry: Sentry,
   };
 
   next();
@@ -55,6 +72,7 @@ const apiHandler = async (req, res) => {
   try {
     graphApi(req, res);
   } catch (e) {
+    Sentry.captureException(e);
     res
       .set('Content-Type', 'application/json')
       .status(500)
@@ -70,5 +88,6 @@ const apiHandler = async (req, res) => {
  */
 export const graphEndpoint = api
   .use(responseTime())
+  .use(useSentry)
   .use(createUserContext)
   .use(apiHandler);

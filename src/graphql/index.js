@@ -45,8 +45,14 @@ const createGateway = userContext =>
       }, // port: 8004
     ],
 
+    // for every child service we want to add information to the request header.
     buildService({ name, url }) {
-      // for every child service we want to add information to the request header.
+      userContext.sentry.addBreadcrumb({
+        category: 'api',
+        message: `building schema for ${name} : ${url}`,
+        level: userContext.sentry.Severity.Info,
+      });
+
       return new AuthenticatedDataSource(url, userContext);
     },
     debug: JSON.parse(process.env.ENABLE_GRAPH_GATEWAY_DEBUG_MODE || false),
