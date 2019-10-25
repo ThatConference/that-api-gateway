@@ -41,8 +41,8 @@ jobs:
           name: tc-api
       - name: Adjust files for FireBase
         run: |
-          mkdir public
           cd ./tc-api
+          mkdir public
           mkdir -p functions/gateway
           mv graphql functions/gateway/graphql
           mv index.js functions/gateway/index.js
