@@ -65,6 +65,11 @@ const createServer = userContext =>
     playground: JSON.parse(process.env.ENABLE_GRAPH_PLAYGROUND)
       ? { endpoint: '/' }
       : false,
+
+    formatError: err => {
+      userContext.sentry.captureException(err);
+      return err;
+    },
   });
 
 export default createServer;
