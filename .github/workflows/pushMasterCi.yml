@@ -62,7 +62,8 @@ jobs:
       - name: Load node modules for Firebase
         run: |
           cd tc-api/functions
-          npm i
+          pwd
+          npm install
       - name: Deploy to Firebase
         uses: w9jds/firebase-action@master
         with:
