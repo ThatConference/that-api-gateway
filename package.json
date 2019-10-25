@@ -4,7 +4,7 @@
   "description": "unspecified version of an apollo gateway",
   "main": "index.js",
   "engines": {
-    "node": "10.15.0"
+    "node": "10"
   },
   "scripts": {
     "build": "rimraf __build__ && babel ./src -d ./__build__ --copy-files --ignore ./**/__tests__",

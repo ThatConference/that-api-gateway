@@ -23,10 +23,6 @@ jobs:
         cp .env.sample .env
         npm ci
         npm run validate
-    - name: Post Build Work
-      run: |
-        mkdir __build__/public
-        touch __build__/public/1
     - name: Archive Build Artifact
       uses: actions/upload-artifact@master
       with:
