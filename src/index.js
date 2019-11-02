@@ -38,10 +38,13 @@ const createUserContext = (req, res, next) => {
   req.userContext = {
     locale: req.headers.locale,
     authToken: req.headers.authorization,
-    correlationId: req.headers['correlation-id']
-      ? req.headers['correlation-id']
+    correlationId: req.headers['that-correlation-id']
+      ? req.headers['that-correlation-id']
       : uuid(),
     sentry: Sentry,
+    enableMocks: req.headers['that-enable-mocks']
+      ? req.headers['that-enable-mocks']
+      : [],
   };
 
   next();
