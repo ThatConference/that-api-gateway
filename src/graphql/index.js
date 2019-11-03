@@ -11,7 +11,11 @@ class AuthenticatedDataSource extends RemoteGraphQLDataSource {
   willSendRequest({ request, context }) {
     request.http.headers.set('Authorization', this.userContext.authToken);
     request.http.headers.set('locale', this.userContext.locale);
-    request.http.headers.set('correlation-id', this.userContext.correlationId);
+    request.http.headers.set(
+      'that-correlation-id',
+      this.userContext.correlationId,
+    );
+    request.http.headers.set('that-enable-mocks', this.userContext.enableMocks);
   }
 }
 
