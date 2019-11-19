@@ -1,13 +1,12 @@
 {
-    "hosting": {
-        "public": "public",
-        "ignore": [
-            "firebase.json",
-            "**/node_modules/**"
-        ],
-        "rewrites": [{
-            "source": "/gateway",
-            "function": "graphGateway"
-        }]
-    }
+  "hosting": {
+    "public": "public",
+    "rewrites": [
+      {
+        "source": "/gateway",
+        "function": "graphGateway"
+      }
+    ],
+    "ignore": ["firebase.json", "**/node_modules/**"]
+  }
 }
