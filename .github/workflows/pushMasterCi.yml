@@ -48,6 +48,7 @@ jobs:
           mv index.js functions/gateway/index.js
           mv package.json functions/package.json
           mv package-lock.json functions/package-lock.json
+          mv .env functions/.env
       - name: Checks and verifications
         run: |
           echo $GITHUB_SHA
