@@ -3,32 +3,31 @@ name: Push Master CI
 
 on:
   push:
-    branches: 
+    branches:
       - master
-    
+
 jobs:
   build:
     name: Build
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout
-      uses: actions/checkout@master
-    - name: Use Node.js 10.x
-      uses: actions/setup-node@master
-      with:
-        node-version: 10.x
-    - name: npm ci, run validate
-      run: |
-        # TODO: set env for CI
-        cp .env.sample .env
-        npm ci
-        npm run validate
-    - name: Archive Build Artifact
-      uses: actions/upload-artifact@master
-      with:
-        name: tc-api
-        path: __build__
-
+      - name: Checkout
+        uses: actions/checkout@master
+      - name: Use Node.js 10.x
+        uses: actions/setup-node@master
+        with:
+          node-version: 10.x
+      - name: npm ci, run validate
+        run: |
+          # TODO: set env for CI
+          cp .env.sample .env
+          npm ci
+          npm run validate
+      - name: Archive Build Artifact
+        uses: actions/upload-artifact@master
+        with:
+          name: tc-api
+          path: __build__
 
   deploy:
     name: Deploy
@@ -49,13 +48,12 @@ jobs:
           mv index.js functions/gateway/index.js
           mv package.json functions/package.json
           mv package-lock.json functions/package-lock.json
-          mv .env functions/.env
       - name: Checks and verifications
         run: |
-            echo $GITHUB_SHA
-            echo $GITHUB_REF
-            echo $PWD
-            ls -lasiR
+          echo $GITHUB_SHA
+          echo $GITHUB_REF
+          echo $PWD
+          ls -lasiR
       - name: Use Node.js 10.x
         uses: actions/setup-node@master
         with:
