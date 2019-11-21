@@ -33,7 +33,7 @@ jobs:
           status: ${{ job.status }}
           author: Push Master CI
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN_ }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_DEV_NOTIFICATIONS }}
         if: job.status == 'failure' || job.status == 'cancelled'
 
@@ -86,6 +86,6 @@ jobs:
           status: ${{ job.status }}
           author: Push Master CI
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN_ }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_DEV_NOTIFICATIONS }}
         if: always()

@@ -35,6 +35,6 @@ jobs:
           status: ${{ job.status }}
           author: PullReq CI
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN_ }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_DEV_NOTIFICATIONS }}
         if: always()
