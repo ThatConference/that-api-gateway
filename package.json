@@ -29,6 +29,7 @@
     "@sentry/node": "^5.7.1",
     "apollo-server-cloud-functions": "^2.9.6",
     "connect": "^3.7.0",
+    "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "firebase-admin": "^8.6.1",
     "firebase-functions": "^3.3.0",
