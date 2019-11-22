@@ -3,31 +3,38 @@ name: PullReq CI
 
 on:
   pull_request:
-    
+
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
-    - name: First Interaction
-      uses: actions/first-interaction@v1
-      with:
-        repo-token: ${{ secrets.GITHUB_TOKEN }}
-        issue-message: 'This is your first submitted issue, THANK YOU! Someone will review shortly.'
-        pr-message: 'This is your your first PR, THANK YOU! Someone will review shortly.'
+      - name: First Interaction
+        uses: actions/first-interaction@v1
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          issue-message: 'This is your first submitted issue, THANK YOU! Someone will review shortly.'
+          pr-message: 'This is your your first PR, THANK YOU! Someone will review shortly.'
 
-    - name: Checkout PR
-      uses: actions/checkout@master
-    - name: Use Node.js 10.x
-      uses: actions/setup-node@master
-      with:
-        node-version: 10.x
-    - name: npm ci, run validate
-      run: |
-        # TODO: set env for CI
-        cp ./.env.sample .env
-        npm ci
-        npm run validate
-      env:
-        CI: true
+      - name: Checkout PR
+        uses: actions/checkout@master
+      - name: Use Node.js 10.x
+        uses: actions/setup-node@master
+        with:
+          node-version: 10.x
+      - name: npm ci, run validate
+        run: |
+          cp ./.env.sample .env
+          npm ci
+          npm run validate
+        env:
+          CI: true
+      - name: Slack Notification
+        uses: 8398a7/action-slack@v2
+        with:
+          status: ${{ job.status }}
+          author: PullReq CI
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_DEV_NOTIFICATIONS }}
+        if: always()
