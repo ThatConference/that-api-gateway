@@ -2,14 +2,22 @@
 /* eslint-disable import/prefer-default-export */
 import 'dotenv/config';
 import connect from 'connect';
+import cors from 'cors';
+import loglevel, { Logger } from 'loglevel';
+import loglevelDebug from 'loglevel-debug';
 import responseTime from 'response-time';
 import * as Sentry from '@sentry/node';
 import uuid from 'uuid/v4';
-import cors from 'cors';
 
 import apolloServer from './graphql';
 
 const api = connect();
+const logger = loglevel.getLogger(`that-api-gatway:`);
+
+loglevelDebug(logger);
+if (process.env.NODE_ENV === 'development') {
+  logger.enableAll();
+}
 
 Sentry.init({
   dsn: process.env.SENTRY_DSN,
@@ -48,6 +56,7 @@ function createUserContext(req, res, next) {
       ? req.headers['that-correlation-id']
       : uuid(),
     sentry: Sentry,
+    logger,
     enableMocks: req.headers['that-enable-mocks']
       ? req.headers['that-enable-mocks']
       : [],
@@ -66,6 +75,8 @@ function createUserContext(req, res, next) {
  *
  */
 function apiHandler(req, res) {
+  logger.info('api handler called');
+
   const graphServer = apolloServer(req.userContext);
   const graphApi = graphServer.createHandler();
 
@@ -73,7 +84,9 @@ function apiHandler(req, res) {
 }
 
 function failure(err, req, res, next) {
-  if (process.env.NODE_ENV === 'development') console.error(err);
+  logger.trace('Middleware Catch All');
+  logger.error('catchall', err);
+
   Sentry.captureException(err);
 
   res

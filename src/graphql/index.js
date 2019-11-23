@@ -51,6 +51,8 @@ const createGateway = userContext =>
 
     // for every child service we want to add information to the request header.
     buildService({ name, url }) {
+      userContext.logger.info(`building schema for ${name} : ${url}`);
+
       userContext.sentry.addBreadcrumb({
         category: 'api',
         message: `building schema for ${name} : ${url}`,
@@ -62,8 +64,10 @@ const createGateway = userContext =>
     debug: JSON.parse(process.env.ENABLE_GRAPH_GATEWAY_DEBUG_MODE || false),
   });
 
-const createServer = userContext =>
-  new ApolloServer({
+const createServer = userContext => {
+  const { logger } = userContext;
+
+  return new ApolloServer({
     gateway: createGateway(userContext),
     subscriptions: false,
     introspection: JSON.parse(process.env.ENABLE_GRAPH_INTROSPECTION || false),
@@ -72,9 +76,12 @@ const createServer = userContext =>
       : false,
 
     formatError: err => {
+      logger.warn(err);
+
       userContext.sentry.captureException(err);
       return err;
     },
   });
+};
 
 export default createServer;
