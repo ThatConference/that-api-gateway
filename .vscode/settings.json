@@ -9,9 +9,9 @@
   "peacock.color": "red",
   "workbench.colorCustomizations": {
     "titleBar.activeBackground": "#ff0000",
-    "titleBar.inactiveBackground": "#ff000099",
+    "titleBar.inactiveBackground": "#ff0000",
     "titleBar.activeForeground": "#000000",
-    "titleBar.inactiveForeground": "#00000099",
+    "titleBar.inactiveForeground": "#000000",
     "statusBar.background": "#ff0000",
     "statusBarItem.hoverBackground": "#ff3333",
     "statusBar.foreground": "#000000"
