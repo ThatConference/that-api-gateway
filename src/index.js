@@ -2,27 +2,40 @@
 /* eslint-disable import/prefer-default-export */
 import 'dotenv/config';
 import connect from 'connect';
+import cors from 'cors';
+import loglevel, { Logger } from 'loglevel';
+import loglevelDebug from 'loglevel-debug';
 import responseTime from 'response-time';
 import * as Sentry from '@sentry/node';
 import uuid from 'uuid/v4';
-import cors from 'cors';
 
 import apolloServer from './graphql';
 
 const api = connect();
+const logger = loglevel.getLogger(`that-api-gatway:`);
+
+loglevelDebug(logger);
+if (process.env.NODE_ENV === 'development') {
+  logger.enableAll();
+}
+
 Sentry.init({
   dsn: process.env.SENTRY_DSN,
   environment: process.env.THAT_ENVIRONMENT,
 });
 
-const markSentry = (req, res, next) => {
+Sentry.configureScope(scope => {
+  scope.setTag('thatApp', 'that-api-gateway');
+});
+
+function markSentry(req, res, next) {
   Sentry.addBreadcrumb({
     category: 'api',
     message: 'Gateway Init',
     level: Sentry.Severity.Info,
   });
   next();
-};
+}
 
 /**
  * http middleware function
@@ -35,7 +48,7 @@ const markSentry = (req, res, next) => {
  * @param {string} next - next function to execute
  *
  */
-const createUserContext = (req, res, next) => {
+function createUserContext(req, res, next) {
   req.userContext = {
     locale: req.headers.locale,
     authToken: req.headers.authorization,
@@ -43,13 +56,14 @@ const createUserContext = (req, res, next) => {
       ? req.headers['that-correlation-id']
       : uuid(),
     sentry: Sentry,
+    logger,
     enableMocks: req.headers['that-enable-mocks']
       ? req.headers['that-enable-mocks']
       : [],
   };
 
   next();
-};
+}
 
 /**
  * http middleware function that follows adhering to express's middleware.
@@ -60,22 +74,26 @@ const createUserContext = (req, res, next) => {
  * @param {string} res - http response
  *
  */
-const apiHandler = (req, res) => {
-  try {
-    const graphServer = apolloServer(req.userContext);
+function apiHandler(req, res) {
+  logger.info('api handler called');
 
-    // todo: set CORS up accordingly
-    const graphApi = graphServer.createHandler();
+  const graphServer = apolloServer(req.userContext);
+  const graphApi = graphServer.createHandler();
 
-    graphApi(req, res);
-  } catch (e) {
-    Sentry.captureException(e);
-    res
-      .set('Content-Type', 'application/json')
-      .status(500)
-      .send(new Error(e));
-  }
-};
+  graphApi(req, res);
+}
+
+function failure(err, req, res, next) {
+  logger.trace('Middleware Catch All');
+  logger.error('catchall', err);
+
+  Sentry.captureException(err);
+
+  res
+    .set('Content-Type', 'application/json')
+    .status(500)
+    .json(err);
+}
 
 /**
  * http middleware function that follows adhering to express's middleware.
@@ -88,4 +106,5 @@ export const graphEndpoint = api
   .use(cors())
   .use(markSentry)
   .use(createUserContext)
-  .use(apiHandler);
+  .use(apiHandler)
+  .use(failure);
