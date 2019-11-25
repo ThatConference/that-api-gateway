@@ -1,4 +1,4 @@
-# template-graph-gateway
+# that-api-gateway
 
 [![Actions Status](https://github.com/ThatConference/that-api-gateway/workflows/Push%20Master%20CI/badge.svg)](https://github.com/ThatConference/that-api-gateway/actions)
 
