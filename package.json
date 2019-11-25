@@ -1,16 +1,14 @@
 {
-  "name": "template-graph-gateway",
+  "name": "that-api-gateway",
   "version": "1.0.0",
-  "description": "unspecified version of an apollo gateway",
+  "description": "THAT Apollo gateway",
   "main": "index.js",
   "engines": {
-    "node": "10"
+    "node": "10.15.0"
   },
   "scripts": {
     "build": "rimraf __build__ && babel ./src -d ./__build__ --copy-files --ignore ./**/__tests__",
-    "after:build:copy:folders": "cp -R functions __build__",
-    "after:build:copy:files": "cp firebase.json .env package.json package-lock.json __build__",
-    "postbuild": "concurrently npm:after:build:*",
+    "postbuild": "cp .env __build__",
     "predeploy:local": "npm run build",
     "deploy:local": "cd ./__build__ && functions-framework --target=graphEndpoint --port=8000",
     "start:watch:this": "nodemon -e env,js,json,graphql --watch src --ignore '*.test.js' --exec npm run deploy:local",
