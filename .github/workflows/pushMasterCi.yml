@@ -67,7 +67,7 @@ jobs:
         env:
           CLOUDSDK_CORE_PROJECT: ${{ secrets.GCP_PROJECT_ID }}
         with:
-          args: functions deploy graphGateway --runtime nodejs10 --trigger-http --source $PWD/tc-api --entry-point graphEndpoint
+          args: functions deploy graphGateway --runtime nodejs10 --trigger-http --source $PWD/tc-api --entry-point graphEndpoint --memory 512MB
       - name: Slack Notification
         uses: 8398a7/action-slack@v2
         with:
