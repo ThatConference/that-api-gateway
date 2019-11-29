@@ -107,6 +107,6 @@ export const graphEndpoint = api
   .use(cors())
   .use(markSentry)
   .use(createUserContext)
-  .use('/voyager', voyagerMiddleware({ endpointUrl: '/graphql' }))
+  .use('/view', voyagerMiddleware({ endpointUrl: '/graphql' }))
   .use(apiHandler)
   .use(failure);
