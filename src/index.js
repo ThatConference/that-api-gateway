@@ -8,6 +8,7 @@ import loglevelDebug from 'loglevel-debug';
 import responseTime from 'response-time';
 import * as Sentry from '@sentry/node';
 import uuid from 'uuid/v4';
+import { express as voyagerMiddleware } from 'graphql-voyager/middleware';
 
 import apolloServer from './graphql';
 
@@ -106,5 +107,6 @@ export const graphEndpoint = api
   .use(cors())
   .use(markSentry)
   .use(createUserContext)
+  .use('/voyager', voyagerMiddleware({ endpointUrl: '/graphql' }))
   .use(apiHandler)
   .use(failure);
