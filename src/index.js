@@ -82,6 +82,12 @@ function createUserContext(req, res, next) {
   next();
 }
 
+async function schemaRefresh(req, res) {
+  logger.info('Refreshing Gateway Schemas');
+  await graphServer.config.gateway.load();
+  res.json({ status: 'reloaded' });
+}
+
 /**
  * http middleware function that follows adhering to express's middleware.
  * Last item in the middleware chain.
@@ -91,18 +97,17 @@ function createUserContext(req, res, next) {
  * @param {string} res - http response
  *
  */
-function apiHandler(req, res) {
+async function apiHandler(req, res) {
   req.log.info('gateway api handler called');
+
+  if (process.env.NODE_ENV === 'development') {
+    req.log.debug('debug mode -> refreshing gateway schemas');
+    await graphServer.config.gateway.load();
+  }
 
   const graphApi = graphServer.createHandler();
 
   graphApi(req, res);
-}
-
-async function schemaRefresh(req, res) {
-  logger.info('Refreshing Gateway Schemas');
-  await graphServer.config.gateway.load();
-  res.json({ status: 'reloaded' });
 }
 
 function failure(err, req, res, next) {
