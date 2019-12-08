@@ -3,22 +3,29 @@
 import 'dotenv/config';
 import connect from 'connect';
 import cors from 'cors';
-import loglevel, { Logger } from 'loglevel';
-import loglevelDebug from 'loglevel-debug';
+import pino from 'pino';
+import pinoExpress from 'pino-express';
 import responseTime from 'response-time';
 import * as Sentry from '@sentry/node';
 import uuid from 'uuid/v4';
 import { express as voyagerMiddleware } from 'graphql-voyager/middleware';
 
 import apolloServer from './graphql';
+import expressLoggingOptions from './expressLogOptions';
 
 const api = connect();
-const logger = loglevel.getLogger(`that-api-gatway:`);
 
-loglevelDebug(logger);
-if (process.env.NODE_ENV === 'development') {
-  logger.enableAll();
-}
+const logger = pino({
+  level: process.env.LOG_LEVEL || 'info',
+  prettyPrint: JSON.parse(process.env.LOG_PRETTY_PRINT || false)
+    ? { colorize: true }
+    : false,
+  mixin() {
+    return {
+      service: 'that-api-gateway',
+    };
+  },
+});
 
 Sentry.init({
   dsn: process.env.SENTRY_DSN,
@@ -28,6 +35,9 @@ Sentry.init({
 Sentry.configureScope(scope => {
   scope.setTag('thatApp', 'that-api-gateway');
 });
+
+// create the apollo server
+const graphServer = apolloServer(logger);
 
 function markSentry(req, res, next) {
   Sentry.addBreadcrumb({
@@ -50,20 +60,32 @@ function markSentry(req, res, next) {
  *
  */
 function createUserContext(req, res, next) {
+  req.log.info('creating user context.');
+
+  const correlationId = req.headers['that-correlation-id']
+    ? req.headers['that-correlation-id']
+    : uuid();
+
+  const contextLogger = req.log.child({ correlationId });
+
   req.userContext = {
     locale: req.headers.locale,
     authToken: req.headers.authorization,
-    correlationId: req.headers['that-correlation-id']
-      ? req.headers['that-correlation-id']
-      : uuid(),
+    correlationId,
     sentry: Sentry,
-    logger,
+    logger: contextLogger,
     enableMocks: req.headers['that-enable-mocks']
       ? req.headers['that-enable-mocks']
       : [],
   };
 
   next();
+}
+
+async function schemaRefresh(req, res) {
+  logger.info('Refreshing Gateway Schemas');
+  await graphServer.config.gateway.load();
+  res.json({ status: 'reloaded' });
 }
 
 /**
@@ -75,18 +97,22 @@ function createUserContext(req, res, next) {
  * @param {string} res - http response
  *
  */
-function apiHandler(req, res) {
-  logger.info('api handler called');
+async function apiHandler(req, res) {
+  req.log.info('gateway api handler called');
 
-  const graphServer = apolloServer(req.userContext);
+  if (process.env.NODE_ENV === 'development') {
+    req.log.debug('debug mode -> refreshing gateway schemas');
+    await graphServer.config.gateway.load();
+  }
+
   const graphApi = graphServer.createHandler();
 
   graphApi(req, res);
 }
 
 function failure(err, req, res, next) {
-  logger.trace('Middleware Catch All');
-  logger.error('catchall', err);
+  req.log.trace('Middleware Catch All');
+  req.log.error('catchall', err);
 
   Sentry.captureException(err);
 
@@ -103,10 +129,12 @@ function failure(err, req, res, next) {
  *
  */
 export const graphEndpoint = api
-  .use(responseTime())
   .use(cors())
+  .use(responseTime())
+  .use(pinoExpress(logger, expressLoggingOptions))
   .use(markSentry)
   .use(createUserContext)
+  .use('/.internal/apollo/schema-refresh', schemaRefresh)
   .use('/view', voyagerMiddleware({ endpointUrl: '/graphql' }))
   .use(apiHandler)
   .use(failure);

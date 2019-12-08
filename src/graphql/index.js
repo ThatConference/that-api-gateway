@@ -1,21 +1,22 @@
 import { ApolloServer } from 'apollo-server-cloud-functions';
 import { ApolloGateway, RemoteGraphQLDataSource } from '@apollo/gateway';
+import _ from 'lodash';
 
 class AuthenticatedDataSource extends RemoteGraphQLDataSource {
-  constructor(url, userContext) {
+  constructor(url) {
     super({ url });
-    this.userContext = userContext;
   }
 
   // eslint-disable-next-line class-methods-use-this
   willSendRequest({ request, context }) {
-    request.http.headers.set('Authorization', this.userContext.authToken);
-    request.http.headers.set('locale', this.userContext.locale);
-    request.http.headers.set(
-      'that-correlation-id',
-      this.userContext.correlationId,
-    );
-    request.http.headers.set('that-enable-mocks', this.userContext.enableMocks);
+    if (!_.isUndefined(context) && !_.isEmpty(context)) {
+      context.logger.info('calling child service, setting headers');
+
+      request.http.headers.set('Authorization', context.authToken);
+      request.http.headers.set('locale', context.locale);
+      request.http.headers.set('that-correlation-id', context.correlationId);
+      request.http.headers.set('that-enable-mocks', context.enableMocks);
+    }
   }
 }
 
@@ -28,7 +29,7 @@ class AuthenticatedDataSource extends RemoteGraphQLDataSource {
  *
  *     createGateway(userContext)
  */
-const createGateway = userContext =>
+const createGateway = logger =>
   new ApolloGateway({
     serviceList: [
       {
@@ -51,37 +52,26 @@ const createGateway = userContext =>
 
     // for every child service we want to add information to the request header.
     buildService({ name, url }) {
-      userContext.logger.info(`building schema for ${name} : ${url}`);
-
-      userContext.sentry.addBreadcrumb({
-        category: 'api',
-        message: `building schema for ${name} : ${url}`,
-        level: userContext.sentry.Severity.Info,
-      });
-
-      return new AuthenticatedDataSource(url, userContext);
+      logger.info(`building schema for ${name} : ${url}`);
+      return new AuthenticatedDataSource(url);
     },
     debug: JSON.parse(process.env.ENABLE_GRAPH_GATEWAY_DEBUG_MODE || false),
   });
 
-const createServer = userContext => {
-  const { logger } = userContext;
-
-  return new ApolloServer({
-    gateway: createGateway(userContext),
+const createServer = logger =>
+  new ApolloServer({
+    gateway: createGateway(logger),
     subscriptions: false,
     introspection: JSON.parse(process.env.ENABLE_GRAPH_INTROSPECTION || false),
     playground: JSON.parse(process.env.ENABLE_GRAPH_PLAYGROUND)
       ? { endpoint: '/' }
       : false,
 
+    context: async ({ req: { userContext } }) => userContext,
+
     formatError: err => {
       logger.warn(err);
-
-      userContext.sentry.captureException(err);
       return err;
     },
   });
-};
-
 export default createServer;
