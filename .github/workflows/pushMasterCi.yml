@@ -51,7 +51,9 @@ jobs:
         with:
           name: tc-api
       - name: write .env file
-        run: echo ${{ secrets.ENV_FILE_PROD }} | base64 -d > tc-api/.env
+        run: |
+          echo ${{ secrets.ENV_FILE_PROD }} | base64 -d > tc-api/.env
+          echo SENTRY_VERSION=that-api-gateway@$(cat tc-api/package.json | jq '.version' | tr -d '"').$(echo $GITHUB_SHA | cut -c1-7) >> tc-api/.env
       - name: Checks and verifications
         run: |
           echo $GITHUB_SHA
