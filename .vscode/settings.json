@@ -17,5 +17,8 @@
     "statusBar.foreground": "#000000"
   },
   "peacock.affectActivityBar": false,
-  "peacock.lightForegroundColor": "#000"
+  "peacock.lightForegroundColor": "#000",
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true
+  }
 }

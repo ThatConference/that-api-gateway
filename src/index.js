@@ -13,6 +13,10 @@ import { express as voyagerMiddleware } from 'graphql-voyager/middleware';
 import apolloServer from './graphql';
 import expressLoggingOptions from './expressLogOptions';
 
+const { version } = require('../package.json');
+
+const defaultVersion = `that-api-gateway@${version}`;
+
 const api = connect();
 
 const logger = pino({
@@ -30,6 +34,7 @@ const logger = pino({
 Sentry.init({
   dsn: process.env.SENTRY_DSN,
   environment: process.env.THAT_ENVIRONMENT,
+  release: process.env.SENTRY_VERSION || defaultVersion,
 });
 
 Sentry.configureScope(scope => {
