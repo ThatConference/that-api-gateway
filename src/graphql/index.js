@@ -1,6 +1,9 @@
+import _ from 'lodash';
 import { ApolloServer } from 'apollo-server-cloud-functions';
 import { ApolloGateway, RemoteGraphQLDataSource } from '@apollo/gateway';
-import _ from 'lodash';
+import debug from 'debug';
+
+const dlog = debug('gateway:graphql');
 
 class AuthenticatedDataSource extends RemoteGraphQLDataSource {
   constructor(url) {
@@ -9,8 +12,10 @@ class AuthenticatedDataSource extends RemoteGraphQLDataSource {
 
   // eslint-disable-next-line class-methods-use-this
   willSendRequest({ request, context }) {
+    dlog('sending request (todo: add something here about request)');
+
     if (!_.isUndefined(context) && !_.isEmpty(context)) {
-      context.logger.info('calling child service, setting headers');
+      dlog('user has context, calling child services, and setting headers');
 
       request.http.headers.set('Authorization', context.authToken);
       request.http.headers.set('locale', context.locale);
@@ -52,7 +57,7 @@ const createGateway = logger =>
 
     // for every child service we want to add information to the request header.
     buildService({ name, url }) {
-      logger.info(`building schema for ${name} : ${url}`);
+      dlog(`building schema for ${name} : ${url}`);
       return new AuthenticatedDataSource(url);
     },
     debug: JSON.parse(process.env.ENABLE_GRAPH_GATEWAY_DEBUG_MODE || false),
