@@ -11,14 +11,12 @@ import uuid from 'uuid/v4';
 import { express as voyagerMiddleware } from 'graphql-voyager/middleware';
 
 import apolloServer from './graphql';
+import { version } from '../package.json';
 
 const dlog = debug('gateway:index');
+
 dlog('gateway started');
-
-const { version } = require('../package.json');
-
 const defaultVersion = `that-api-gateway@${version}`;
-
 const api = connect();
 
 const logger = pino({
@@ -35,6 +33,7 @@ Sentry.init({
   dsn: process.env.SENTRY_DSN,
   environment: process.env.THAT_ENVIRONMENT,
   release: process.env.SENTRY_VERSION || defaultVersion,
+  debug: process.env.NODE_ENV === 'development',
 });
 
 Sentry.configureScope(scope => {
@@ -125,8 +124,8 @@ async function apiHandler(req, res) {
 }
 
 function failure(err, req, res, next) {
+  req.log.error(err);
   req.log.trace('Middleware Catch All');
-  req.log.error('catchall', err);
 
   Sentry.captureException(err);
 
