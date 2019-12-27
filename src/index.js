@@ -13,7 +13,7 @@ import { express as voyagerMiddleware } from 'graphql-voyager/middleware';
 import apolloServer from './graphql';
 import { version } from '../package.json';
 
-const dlog = debug('gateway:index');
+const dlog = debug('that:api:gateway:index');
 
 dlog('gateway started');
 const defaultVersion = `that-api-gateway@${version}`;
@@ -44,9 +44,9 @@ Sentry.configureScope(scope => {
 const graphServer = apolloServer(logger);
 
 function attachLogger(loggerInstance) {
-  dlog('gateway:attachLogger');
+  dlog('attaching Logger');
   return (req, res, next) => {
-    dlog('gateway:attachingLogger');
+    dlog('attached Logger');
     req.log = loggerInstance;
     next();
   };
