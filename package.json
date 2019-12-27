@@ -18,6 +18,7 @@
     "start:watch:sessions": "cd ../that-api-sessions && npm run start:watch",
     "start:watch:members": "cd ../that-api-members && npm run start:watch",
     "start:watch": "concurrently -n gateway,events,partners,sessions,members npm:start:watch:this npm:start:watch:events npm:start:watch:partners npm:start:watch:sessions npm:start:watch:members -c \"bgRed,bgGreen,bgCyan,bgYellow,bgMagenta\"",
+    "start:watch:raw": "concurrently npm:start:watch:this npm:start:watch:events npm:start:watch:partners npm:start:watch:sessions npm:start:watch:members --raw",
     "test": "jest --coverage --passWithNoTests",
     "test:watch": "cross-env  jest --watchAll",
     "lint": "eslint 'src/**/*.js'",

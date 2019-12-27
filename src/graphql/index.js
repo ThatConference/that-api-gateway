@@ -3,7 +3,7 @@ import { ApolloServer } from 'apollo-server-cloud-functions';
 import { ApolloGateway, RemoteGraphQLDataSource } from '@apollo/gateway';
 import debug from 'debug';
 
-const dlog = debug('gateway:graphql');
+const dlog = debug('that:api:gateway:graphql');
 
 class AuthenticatedDataSource extends RemoteGraphQLDataSource {
   constructor(url) {
