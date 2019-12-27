@@ -14,13 +14,18 @@ class AuthenticatedDataSource extends RemoteGraphQLDataSource {
   willSendRequest({ request, context }) {
     dlog('sending request (todo: add something here about request)');
 
-    if (!_.isUndefined(context) && !_.isEmpty(context)) {
+    if (!_.isNil(context)) {
       dlog('user has context, calling child services, and setting headers');
+      dlog('context %o', context);
 
-      request.http.headers.set('Authorization', context.authToken);
-      request.http.headers.set('locale', context.locale);
-      request.http.headers.set('that-correlation-id', context.correlationId);
-      request.http.headers.set('that-enable-mocks', context.enableMocks);
+      if (context.authToken)
+        request.http.headers.set('Authorization', context.authToken);
+
+      if (context.correlationId)
+        request.http.headers.set('that-correlation-id', context.correlationId);
+
+      if (context.enableMocks)
+        request.http.headers.set('that-enable-mocks', context.enableMocks);
     }
   }
 }

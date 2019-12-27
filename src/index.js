@@ -89,7 +89,7 @@ function createUserContext(req, res, next) {
     logger: contextLogger,
     enableMocks: req.headers['that-enable-mocks']
       ? req.headers['that-enable-mocks']
-      : [],
+      : false,
   };
 
   next();
