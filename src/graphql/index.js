@@ -16,7 +16,6 @@ class AuthenticatedDataSource extends RemoteGraphQLDataSource {
 
     if (!_.isNil(context)) {
       dlog('user has context, calling child services, and setting headers');
-      dlog('context %o', context);
 
       if (context.authToken)
         request.http.headers.set('Authorization', context.authToken);
