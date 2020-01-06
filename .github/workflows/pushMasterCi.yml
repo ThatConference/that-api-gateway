@@ -41,8 +41,8 @@ jobs:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_DEV_NOTIFICATIONS }}
         if: job.status == 'failure' || job.status == 'cancelled'
 
-  deploy-graph:
-    name: Deploy Graph
+  deploy-gateway:
+    name: Deploy Gateway
     needs: build
     runs-on: ubuntu-latest
     steps:
