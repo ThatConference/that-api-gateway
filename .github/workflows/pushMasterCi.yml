@@ -41,8 +41,8 @@ jobs:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_DEV_NOTIFICATIONS }}
         if: job.status == 'failure' || job.status == 'cancelled'
 
-  deploy:
-    name: Deploy
+  deploy-graph:
+    name: Deploy Graph
     needs: build
     runs-on: ubuntu-latest
     steps:
@@ -70,6 +70,47 @@ jobs:
           service_account_key: ${{ secrets.GCLOUD_AUTH }}
       - name: Run GCP Deploy Function - gateway
         run: gcloud functions deploy graphGateway --runtime nodejs10 --trigger-http --source $PWD/tc-api --entry-point graphEndpoint --memory 512MB
+        env:
+          CLOUDSDK_CORE_PROJECT: ${{ secrets.GCP_PROJECT_ID }}
+      - name: Slack Notification
+        uses: 8398a7/action-slack@v2
+        with:
+          status: ${{ job.status }}
+          author: Push Master CI
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_DEV_NOTIFICATIONS }}
+        if: always()
+
+  deploy-image:
+    name: Deploy Image Upload
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download Build Artifact
+        uses: actions/download-artifact@master
+        with:
+          name: tc-api
+      - name: write .env file
+        run: |
+          echo ${{ secrets.ENV_FILE_PROD }} | base64 -d > tc-api/.env
+          SENTRYREL=SENTRY_VERSION=that-imgage-upload@$(cat tc-api/package.json | jq '.version' | tr -d '"')-$(echo $GITHUB_SHA | cut -c1-7)
+          echo $SENTRYREL >> tc-api/.env
+          echo "::set-env name=SENTRYREL::$SENTRYREL"
+      - name: Checks and verifications
+        run: |
+          echo $SENTRYREL
+          echo $GITHUB_SHA
+          echo $GITHUB_REF
+          echo $PWD
+          ls -lasiR
+      - name: Setup GCP Actions
+        uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
+        with:
+          version: '270.0.0'
+          service_account_key: ${{ secrets.GCLOUD_AUTH }}
+      - name: Run GCP Deploy Function - imageUpload
+        run: gcloud functions deploy fileUploadGateway --runtime nodejs10 --trigger-http --source $PWD/tc-api --entry-point fileUploadEndpoint --memory 512MB
         env:
           CLOUDSDK_CORE_PROJECT: ${{ secrets.GCP_PROJECT_ID }}
       - name: Slack Notification
