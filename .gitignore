@@ -44,4 +44,5 @@ jspm_packages/
 
 __build__/
 __testCoverage__/
+__private__/
 .DS_Store
