@@ -85,7 +85,7 @@ async function uploadFile(req, res) {
     dlog('finished writing');
     res.status(200).json({
       data: {
-        url: `https://that.imgix.net/members/${imageName}?w=250&h=250&fit=facearea&facepad=2&mask=ellipse&fm=png`,
+        url: `https://that.imgix.net/members/${imageName}`,
       },
     });
   });
