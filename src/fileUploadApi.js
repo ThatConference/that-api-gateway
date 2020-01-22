@@ -49,7 +49,7 @@ function authz(role) {
       next();
     } else {
       dlog('failed permission validation');
-      res.status(403).send('Permissions Denied');
+      res.status(401).send('Permissions Denied');
     }
   };
 }
@@ -93,6 +93,17 @@ async function uploadFile(req, res) {
   stream.end(profileImage.buffer);
 }
 
+const checkAuth = (req, res) => {
+  if (req.method !== 'GET') {
+    dlog('checkAuth bad method: %o', req.method);
+    res.status(400).send();
+  }
+  res
+    .set('Content-Type', 'application/json')
+    .status(200)
+    .json({});
+};
+
 function failure(err, req, res, next) {
   dlog('middleware catchall error %o', err);
   Sentry.captureException(err);
@@ -110,5 +121,7 @@ export default api
   .use('/profile', authz('members'))
   .use('/profile', fileUpload)
   .use('/profile', uploadFile)
+  .use('/check', authz('members'))
+  .use('/check', checkAuth)
 
   .use(failure);
