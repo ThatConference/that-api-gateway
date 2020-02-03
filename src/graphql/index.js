@@ -2,8 +2,10 @@ import _ from 'lodash';
 import { ApolloServer } from 'apollo-server-cloud-functions';
 import { ApolloGateway, RemoteGraphQLDataSource } from '@apollo/gateway';
 import debug from 'debug';
+import { graph } from '@thatconference/api';
 
 const dlog = debug('that:api:gateway:graphql');
+const { lifecycle } = graph.events;
 
 class AuthenticatedDataSource extends RemoteGraphQLDataSource {
   constructor(url) {
@@ -77,6 +79,21 @@ const createServer = logger =>
       : false,
 
     context: async ({ req: { userContext } }) => userContext,
+
+    plugins: [
+      {
+        requestDidStart(req) {
+          return {
+            executionDidStart(requestContext) {
+              lifecycle.emit('executionDidStart', {
+                service: 'that:api:gateway',
+                requestContext,
+              });
+            },
+          };
+        },
+      },
+    ],
 
     formatError: err => {
       logger.warn(err);
