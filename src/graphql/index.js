@@ -80,20 +80,20 @@ const createServer = logger =>
 
     context: async ({ req: { userContext } }) => userContext,
 
-    plugins: [
-      {
-        requestDidStart(req) {
-          return {
-            executionDidStart(requestContext) {
-              lifecycle.emit('executionDidStart', {
-                service: 'that:api:gateway',
-                requestContext,
-              });
-            },
-          };
-        },
-      },
-    ],
+    // plugins: [
+    //   {
+    //     requestDidStart(req) {
+    //       return {
+    //         executionDidStart(requestContext) {
+    //           lifecycle.emit('executionDidStart', {
+    //             service: 'that:api:gateway',
+    //             requestContext,
+    //           });
+    //         },
+    //       };
+    //     },
+    //   },
+    // ],
 
     formatError: err => {
       logger.warn(err);
