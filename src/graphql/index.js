@@ -1,103 +1,147 @@
-import _ from 'lodash';
-import { ApolloServer } from 'apollo-server-cloud-functions';
-import { ApolloGateway, RemoteGraphQLDataSource } from '@apollo/gateway';
+/* eslint-disable no-console */
+/* eslint-disable import/prefer-default-export */
+import 'dotenv/config';
+import connect from 'connect';
+import cors from 'cors';
 import debug from 'debug';
-import { graph } from '@thatconference/api';
+import pino from 'pino';
+import responseTime from 'response-time';
+import * as Sentry from '@sentry/node';
+import uuid from 'uuid/v4';
+import { express as voyagerMiddleware } from 'graphql-voyager/middleware';
 
-const dlog = debug('that:api:gateway:graphql');
-const { lifecycle } = graph.events;
+import apolloServer from './server';
+import { version } from '../../package.json';
 
-class AuthenticatedDataSource extends RemoteGraphQLDataSource {
-  constructor(url) {
-    super({ url });
-  }
+const dlog = debug('that:api:gateway:index');
+dlog('graph api started');
 
-  // eslint-disable-next-line class-methods-use-this
-  willSendRequest({ request, context }) {
-    dlog('sending request (todo: add something here about request)');
+const defaultVersion = `that-api-gateway@${version}`;
+const api = connect();
 
-    if (!_.isNil(context)) {
-      dlog('user has context, calling child services, and setting headers');
+const logger = pino({
+  level: process.env.LOG_LEVEL || 'info',
+  prettyPrint: JSON.parse(process.env.LOG_PRETTY_PRINT || false),
+  mixin() {
+    return {
+      service: 'that-api-gateway',
+    };
+  },
+});
 
-      if (context.authToken)
-        request.http.headers.set('Authorization', context.authToken);
+Sentry.init({
+  dsn: process.env.SENTRY_DSN,
+  environment: process.env.THAT_ENVIRONMENT,
+  release: process.env.SENTRY_VERSION || defaultVersion,
+  debug: process.env.NODE_ENV === 'development',
+});
 
-      if (context.correlationId)
-        request.http.headers.set('that-correlation-id', context.correlationId);
+Sentry.configureScope(scope => {
+  scope.setTag('thatApp', 'that-api-gateway');
+});
 
-      if (context.enableMocks)
-        request.http.headers.set('that-enable-mocks', context.enableMocks);
-    }
-  }
+// create the apollo server
+const graphServer = apolloServer(logger);
+
+function attachLogger(loggerInstance) {
+  dlog('attaching Logger');
+  return (req, res, next) => {
+    dlog('attached Logger');
+    req.log = loggerInstance;
+    next();
+  };
+}
+
+function markSentry(req, res, next) {
+  Sentry.addBreadcrumb({
+    category: 'api',
+    message: 'Gateway Init',
+    level: Sentry.Severity.Info,
+  });
+  next();
 }
 
 /**
- * will create you a configured instance of an apollo gateway
- * @param {object} userContext - user context that w
- * @return {object} a configured instance of an apollo gateway.
+ * http middleware function
+ * here we are intercepting the http call and building our own notion of a users context.
+ * we then add it to the request so it can later be used by the gateway.
+ * If you had something like a token that needs to be passed through to the gateways children this is how you intercept it and setup for later.
  *
- * @example
+ * @param {string} req - http request
+ * @param {string} res - http response
+ * @param {string} next - next function to execute
  *
- *     createGateway(userContext)
  */
-const createGateway = logger =>
-  new ApolloGateway({
-    serviceList: [
-      {
-        name: 'Events',
-        url: process.env.THAT_API_EVENTS,
-      }, // port: 8001
-      {
-        name: 'Partners',
-        url: process.env.THAT_API_PARTNERS,
-      }, // port: 8002
-      {
-        name: 'Sessions',
-        url: process.env.THAT_API_SESSIONS,
-      }, // port: 8003
-      {
-        name: 'Members',
-        url: process.env.THAT_API_MEMBERS,
-      }, // port: 8004
-    ],
+function createUserContext(req, res, next) {
+  dlog('creating user context.');
 
-    // for every child service we want to add information to the request header.
-    buildService({ name, url }) {
-      dlog(`building schema for ${name} : ${url}`);
-      return new AuthenticatedDataSource(url);
-    },
-    debug: JSON.parse(process.env.ENABLE_GRAPH_GATEWAY_DEBUG_MODE || false),
-  });
+  const correlationId = req.headers['that-correlation-id']
+    ? req.headers['that-correlation-id']
+    : uuid();
 
-const createServer = logger =>
-  new ApolloServer({
-    gateway: createGateway(logger),
-    subscriptions: false,
-    introspection: JSON.parse(process.env.ENABLE_GRAPH_INTROSPECTION || false),
-    playground: JSON.parse(process.env.ENABLE_GRAPH_PLAYGROUND)
-      ? { endpoint: '/' }
+  const contextLogger = req.log.child({ correlationId });
+
+  req.userContext = {
+    locale: req.headers.locale,
+    authToken: req.headers.authorization,
+    correlationId,
+    sentry: Sentry,
+    logger: contextLogger,
+    enableMocks: req.headers['that-enable-mocks']
+      ? req.headers['that-enable-mocks']
       : false,
+  };
 
-    context: async ({ req: { userContext } }) => userContext,
+  next();
+}
 
-    // plugins: [
-    //   {
-    //     requestDidStart(req) {
-    //       return {
-    //         executionDidStart(requestContext) {
-    //           lifecycle.emit('executionDidStart', {
-    //             service: 'that:api:gateway',
-    //             requestContext,
-    //           });
-    //         },
-    //       };
-    //     },
-    //   },
-    // ],
+async function schemaRefresh(req, res) {
+  dlog('Refreshing Gateway Schemas');
+  await graphServer.config.gateway.load();
+  res.json({ status: 'reloaded' });
+}
 
-    formatError: err => {
-      logger.warn(err);
-      return err;
-    },
-  });
-export default createServer;
+const graphApi = graphServer.createHandler();
+
+/**
+ * http middleware function that follows adhering to express's middleware.
+ * Last item in the middleware chain.
+ * This is your api handler for your serverless function
+ *
+ * @param {string} req - http request
+ * @param {string} res - http response
+ *
+ */
+function apiHandler(req, res) {
+  dlog('gateway api handler called');
+
+  // if (process.env.NODE_ENV === 'development') {
+  //   req.log.debug('debug mode -> refreshing gateway schemas');
+  //   await graphServer.config.gateway.load();
+  // }
+
+  return graphApi(req, res);
+}
+
+function failure(err, req, res, next) {
+  req.log.error(err);
+  req.log.trace('Middleware Catch All');
+
+  Sentry.captureException(err);
+
+  res
+    .set('Content-Type', 'application/json')
+    .status(500)
+    .json(err);
+}
+
+export const handler = api
+  .use(cors())
+  .use(responseTime())
+  .use(attachLogger(logger))
+  .use(markSentry)
+  .use(createUserContext)
+  .use('/.internal/apollo/schema-refresh', schemaRefresh)
+  .use('/view', voyagerMiddleware({ endpointUrl: '/graphql' }))
+  .use(apiHandler)
+  .use(failure);

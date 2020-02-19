@@ -1,3 +1,4 @@
+/* eslint-disable import/prefer-default-export */
 import 'dotenv/config';
 import connect from 'connect';
 import cors from 'cors';
@@ -11,8 +12,8 @@ import mime from 'mime-types';
 import uuid from 'uuid/v4';
 
 import fileUpload from './middleware/fileUpload';
-import envConfig from './envConfig';
-import { version } from '../package.json';
+import envConfig from '../envConfig';
+import { version } from '../../package.json';
 
 const api = connect();
 const dlog = debug('that:api:gateway:fileUpload');
@@ -114,7 +115,7 @@ function failure(err, req, res, next) {
     .json(err);
 }
 
-export default api
+export const handler = api
   .use(cors())
   .use(responseTime())
   .use(jwtCheck)

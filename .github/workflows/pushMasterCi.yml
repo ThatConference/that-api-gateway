@@ -83,7 +83,7 @@ jobs:
           echo $PWD
           ls -lasiR
       - name: Run GCP Deploy Function - gateway
-        run: gcloud functions deploy graphGateway --runtime nodejs10 --trigger-http --source $PWD/tc-api --entry-point graphEndpoint --memory 512MB
+        run: gcloud functions deploy graphGateway --runtime nodejs10 --trigger-http --source $PWD/tc-api/graphql --entry-point handler --memory 512MB
         env:
           CLOUDSDK_CORE_PROJECT: ${{ secrets.GCP_PROJECT_ID }}
       - name: Slack Notification
@@ -135,7 +135,7 @@ jobs:
           echo $PWD
           ls -lasiR
       - name: Run GCP Deploy Function - imageUpload
-        run: gcloud functions deploy fileUploadGateway --runtime nodejs10 --trigger-http --source $PWD/tc-api --entry-point fileUploadEndpoint --memory 512MB
+        run: gcloud functions deploy fileUploadGateway --runtime nodejs10 --trigger-http --source $PWD/tc-api/fileUpload --entry-point handler --memory 512MB
         env:
           CLOUDSDK_CORE_PROJECT: ${{ secrets.GCP_PROJECT_ID }}
       - name: Slack Notification
