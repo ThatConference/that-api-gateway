@@ -1,16 +1,48 @@
-function configMissing(configKey) {
+import debug from 'debug';
+
+import { version } from '../package.json';
+
+const defaultVersion = `that-api-gateway@${version}`;
+const dlog = debug('that:api:gateway:config');
+
+function missingConfig(configKey) {
   throw new Error(`missing required .env setting for ${configKey}`);
 }
 
-const requiredConfig = () => ({
-  security: {
-    jwksUri: process.env.AUTH0_JWKS_URI || configMissing('AUTH0_JWKS_URI'),
-    audience: process.env.AUTH0_AUDIENCE || configMissing('AUTH0_AUDIENCE'),
-    issuer: process.env.AUTH0_ISSUER || configMissing('AUTH0_ISSUER'),
-  },
-  google: {
-    imageBucketName: process.env.GOOGLE_BUCKET_NAME || 'that-images',
-  },
-});
+const requiredConfig = () => {
+  const config = {
+    servicesList: {
+      events: process.env.THAT_API_EVENTS || missingConfig('THAT_API_EVENTS'),
+      partners:
+        process.env.THAT_API_PARTNERS || missingConfig('THAT_API_PARTNERS'),
+      sessions:
+        process.env.THAT_API_SESSIONS || missingConfig('THAT_API_SESSIONS'),
+      members:
+        process.env.THAT_API_MEMBERS || missingConfig('THAT_API_MEMBERS'),
+    },
+
+    apollo: {
+      debug: JSON.parse(process.env.ENABLE_GRAPH_GATEWAY_DEBUG_MODE || false),
+      introspection: JSON.parse(
+        process.env.ENABLE_GRAPH_INTROSPECTION || false,
+      ),
+      playground: JSON.parse(process.env.ENABLE_GRAPH_PLAYGROUND)
+        ? { endpoint: '/' }
+        : false,
+    },
+
+    sentry: {
+      dsn: process.env.SENTRY_DSN || missingConfig('SENTRY_DSN'),
+      environment:
+        process.env.THAT_ENVIRONMENT || missingConfig('THAT_ENVIRONMENT'),
+      release: process.env.SENTRY_VERSION || defaultVersion,
+      debug: process.env.NODE_ENV === 'development',
+    },
+  };
+
+  dlog('created config %O', config);
+
+  return config;
+};
 
 export default requiredConfig();
