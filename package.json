@@ -28,7 +28,7 @@
   "dependencies": {
     "@apollo/gateway": "^0.12.1",
     "@sentry/node": "^5.12.4",
-    "@thatconference/api": "^1.4.0",
+    "@thatconference/api": "^1.4.1",
     "apollo-server-cloud-functions": "^2.10.1",
     "connect": "^3.7.0",
     "cors": "^2.8.5",
