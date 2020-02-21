@@ -2,12 +2,12 @@ import _ from 'lodash';
 import { ApolloServer } from 'apollo-server-cloud-functions';
 import { ApolloGateway, RemoteGraphQLDataSource } from '@apollo/gateway';
 import debug from 'debug';
-// import { graph } from '@thatconference/api';
+import { graph } from '@thatconference/api';
 
 import config from '../envConfig';
 
 const dlog = debug('that:api:gateway:graphql');
-// const { lifecycle } = graph.events;
+const { lifecycle } = graph.events;
 
 class AuthenticatedDataSource extends RemoteGraphQLDataSource {
   constructor(url) {
@@ -74,10 +74,10 @@ const createServer = new ApolloServer({
           executionDidStart(requestContext) {
             dlog('incoming query \r\n %s', requestContext.source);
 
-            // lifecycle.emit('executionDidStart', {
-            //   service: 'that:api:gateway',
-            //   requestContext,
-            // });
+            lifecycle.emit('executionDidStart', {
+              service: 'that:api:gateway',
+              requestContext,
+            });
           },
         };
       },

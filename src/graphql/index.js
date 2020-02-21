@@ -1,7 +1,7 @@
 import 'dotenv/config';
 import connect from 'connect';
-// import cors from 'cors';
 import debug from 'debug';
+import { middleware } from '@thatconference/api';
 
 import responseTime from 'response-time';
 import * as Sentry from '@sentry/node';
@@ -13,6 +13,7 @@ import config from '../envConfig';
 
 const dlog = debug('that:api:gateway:index');
 dlog('graph api started');
+const { requestLogger } = middleware;
 
 const api = connect();
 
@@ -76,6 +77,7 @@ function failure(err, req, res, next) {
 
 export default api
   .use(responseTime())
+  .use(requestLogger('that:api:gateway').handler)
   .use(createUserContext)
   .use('/.internal/apollo/schema-refresh', schemaRefresh)
   .use('/view', voyagerMiddleware({ endpointUrl: '/graphql' }))
