@@ -31,14 +31,17 @@ Sentry.configureScope(scope => {
 function createUserContext(req, res, next) {
   dlog('creating user context.');
 
+  const correlationId = req.headers['that-correlation-id']
+    ? req.headers['that-correlation-id']
+    : uuid();
+
+  Sentry.configureScope(scope => {
+    scope.setTag('correlationId', correlationId);
+  });
+
   req.userContext = {
     authToken: req.headers.authorization,
-    sentry: Sentry,
-
-    correlationId: req.headers['that-correlation-id']
-      ? req.headers['that-correlation-id']
-      : uuid(),
-
+    correlationId,
     enableMocks: req.headers['that-enable-mocks']
       ? req.headers['that-enable-mocks']
       : false,
