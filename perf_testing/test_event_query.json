@@ -1,0 +1,5 @@
+{
+  "query": " query getEvent($eventId: ID!) {\n  events {\n    event(id: $eventId) {\n      id\n      name\n      slogan\n      startDate\n      endDate\n      venues\n      {\n        id\n        name\n        address\n        city\n        state\n        zip\n      }\n      milestones {\n        title\n        description\n        dueDate\n      }\n      notifications {\n        id\n        shouldFeature\n        title\n        message\n        startDate\n        endDate\n        link\n        linkText\n      }\n    }  \n  }\n}",
+  "variables": { "eventId": "ByE7Dc7eCGcRFzLhWhuI" },
+  "operationName": "getEvent"
+}

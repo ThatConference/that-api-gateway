@@ -1,0 +1,1 @@
+clinic doctor --on-port "autocannon -m 'POST' -i ./test_ac_events.json -H 'Content-Type: application/json' localhost:8001" -- node ./node_modules/@google-cloud/functions-framework --source=./__build__ --target=graphEndpoint --port=8000

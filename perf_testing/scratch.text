@@ -1,0 +1,12 @@
+
+
+  "build": "rimraf __build__ && babel ./src -d ./__build__ --copy-files",
+  "postbuild": "cp .env __build__",
+  "predeploy:local": "npm run build",
+  "deploy:local": "cd ./__build__ && functions-framework --target=graphEndpoint --port=8001",
+  "predeploy:local:inspect": "npm run build",
+  "deploy:local:inspect": "cd ./__build__ && node --inspect ../node_modules/@google-cloud/functions-framework --target=graphEndpoint --port=8001",
+  "start:watch": "nodemon -e env,js,json,graphql --watch src --ignore '*.test.js' --exec npm run deploy:local",
+  "start:watch:inspect": "nodemon -e env,js,json,graphql --watch src --ignore '*.test.js' --exec npm run deploy:local:inspect",
+  "test:dev": "nodemon -e env,js,json,graphql --watch src --ignore '*.test.js' --exec npm run build",
+  
