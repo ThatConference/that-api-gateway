@@ -29,7 +29,8 @@ jobs:
         run: |
           cp ./package.json __build__/
           cp ./package-lock.json __build__/
-          git rev-list --count master > __build__/ccnt.txt
+          # git rev-list --count master > __build__/ccnt.txt
+          echo 0 > __build__/ccnt.txt
       - name: Archive Build Artifact
         uses: actions/upload-artifact@v1
         with:
