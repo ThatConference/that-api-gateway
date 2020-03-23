@@ -76,5 +76,7 @@ api
   .use(failure);
 
 graphServer.applyMiddleware({ app: api, path: '/' });
-const port = process.env.PORT || 8000;
-api.listen({ port }, () => dlog(`gateway running on %d`, port));
+// const port = process.env.PORT || 8000;
+// api.listen({ port }, () => dlog(`gateway running on %d`, port));
+
+export const handler = api;
