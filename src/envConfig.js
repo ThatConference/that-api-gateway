@@ -1,6 +1,16 @@
 import debug from 'debug';
 
-import { version } from '../package.json';
+// import { version } from '../package.json';
+let version;
+(async () => {
+  let p;
+  try {
+    p = await import('./package.json');
+  } catch {
+    p = await import('../package.json');
+  }
+  version = p.version;
+})();
 
 const defaultVersion = `that-api-gateway@${version}`;
 const dlog = debug('that:api:gateway:config');
