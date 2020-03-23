@@ -29,6 +29,7 @@ jobs:
         run: |
           cp ./package.json __build__/
           cp ./package-lock.json __build__/
+          cp ./Dockerfile __build__/
           # git rev-list --count master > __build__/ccnt.txt
           echo 0 > __build__/ccnt.txt
       - name: Archive Build Artifact
@@ -70,7 +71,9 @@ jobs:
         env:
           CLOUDSDK_CORE_PROJECT: ${{ secrets.GCP_PROJECT_ID }}
       - name: Build docker image
-        run: docker build . --tag us.gcr.io/${{ secrets.GCP_PROJECT_ID }}/gateway
+        run: |
+          cp __build__/Dockerfile ./
+          docker build . --tag us.gcr.io/${{ secrets.GCP_PROJECT_ID }}/gateway
       - name: Publish image to gcp
         run: docker push us.gcr.io/${{ secrets.GCP_PROJECT_ID }}/gateway
       - name: Deploy to Cloud Run
