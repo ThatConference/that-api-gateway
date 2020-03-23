@@ -72,7 +72,7 @@ jobs:
           CLOUDSDK_CORE_PROJECT: ${{ secrets.GCP_PROJECT_ID }}
       - name: Build docker image
         run: |
-          cp __build__/Dockerfile ./
+          cp __build__/Dockerfile ./ && rm __build__/Dockerfile
           docker build . --tag us.gcr.io/${{ secrets.GCP_PROJECT_ID }}/gateway
       - name: Publish image to gcp
         run: docker push us.gcr.io/${{ secrets.GCP_PROJECT_ID }}/gateway
