@@ -6,7 +6,7 @@ FROM node:12-alpine
 WORKDIR /usr/src/that
 
 # Copy build artifacts into image
-COPY __build__/* ./
+COPY __build__ ./
 
 # install production node_modules
 RUN npm install --production
