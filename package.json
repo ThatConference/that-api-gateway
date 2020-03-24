@@ -33,6 +33,7 @@
     "validate": "concurrently npm:test npm:lint npm:build"
   },
   "dependencies": {
+    "@google-cloud/functions-framework": "^1.5.0",
     "@apollo/gateway": "^0.12.1",
     "@sentry/node": "^5.13.1",
     "@thatconference/api": "^1.5.0",
@@ -55,7 +56,6 @@
     "@babel/node": "^7.8.4",
     "@babel/preset-env": "^7.8.6",
     "@babel/register": "^7.8.6",
-    "@google-cloud/functions-framework": "^1.5.0",
     "babel-eslint": "^10.1.0",
     "babel-jest": "^24.9.0",
     "concurrently": "^5.1.0",
