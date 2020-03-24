@@ -4,11 +4,11 @@
   "description": "THAT Apollo gateway",
   "main": "index.js",
   "engines": {
-    "node": "10.15.0"
+    "node": "12.x"
   },
   "scripts": {
     "build": "rimraf __build__ && babel ./src -d ./__build__ --copy-files --ignore ./**/__tests__",
-    "postbuild": "cp .env __build__",
+    "postbuild": "cp .env package* __build__",
     "predeploy:api:graphEndpoint": "npm run build",
     "deploy:api:graphEndpoint": "functions-framework --target=handler --port=8000 --source=./__build__",
     "start:watch:api:graphApi": "nodemon -e env,js,json,graphql --watch src --ignore '*.test.js' --exec npm run deploy:api:graphEndpoint",
@@ -34,40 +34,40 @@
   },
   "dependencies": {
     "@google-cloud/functions-framework": "^1.5.0",
-    "@apollo/gateway": "^0.12.1",
-    "@sentry/node": "^5.13.1",
+    "@apollo/gateway": "^0.13.2",
+    "@sentry/node": "^5.15.0",
     "@thatconference/api": "^1.5.0",
     "apollo-server-express": "^2.11.0",
     "cors": "^2.8.5",
     "debug": "^4.1.1",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
-    "firebase-admin": "^8.9.2",
-    "firebase-functions": "^3.3.0",
+    "firebase-admin": "^8.10.0",
+    "firebase-functions": "^3.5.0",
     "graphql": "^14.6.0",
     "graphql-voyager": "^1.0.0-rc.29",
     "lodash": "^4.17.15",
     "response-time": "^2.3.2",
-    "uuid": "^3.4.0"
+    "uuid": "^7.0.2"
   },
   "devDependencies": {
     "@babel/cli": "^7.8.4",
-    "@babel/core": "^7.8.6",
-    "@babel/node": "^7.8.4",
-    "@babel/preset-env": "^7.8.6",
-    "@babel/register": "^7.8.6",
+    "@babel/core": "^7.9.0",
+    "@babel/node": "^7.8.7",
+    "@babel/preset-env": "^7.9.0",
+    "@babel/register": "^7.9.0",
     "babel-eslint": "^10.1.0",
-    "babel-jest": "^24.9.0",
+    "babel-jest": "^25.1.0",
     "concurrently": "^5.1.0",
     "eslint": "^6.8.0",
-    "eslint-config-airbnb-base": "^14.0.0",
-    "eslint-config-prettier": "^6.10.0",
+    "eslint-config-airbnb-base": "^14.1.0",
+    "eslint-config-prettier": "^6.10.1",
     "eslint-plugin-babel": "^5.3.0",
     "eslint-plugin-import": "^2.20.1",
-    "eslint-plugin-jest": "^23.8.1",
+    "eslint-plugin-jest": "^23.8.2",
     "eslint-plugin-prettier": "^3.1.2",
-    "husky": "^3.1.0",
-    "jest-cli": "^24.9.0",
+    "husky": "^4.2.3",
+    "jest-cli": "^25.1.0",
     "nodemon": "^2.0.2",
     "prettier-eslint": "^9.0.1",
     "prettier-eslint-cli": "^5.0.0"
@@ -82,5 +82,10 @@
     "verbose": true,
     "rootDir": "./src",
     "coverageDirectory": "../__testCoverage__"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ThatConference/that-api-gateway"
+  },
+  "license": "GPL-3.0"
 }

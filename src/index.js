@@ -67,7 +67,6 @@ function failure(err, req, res, next) {
 }
 
 api
-  .set('etag', false)
   .use(responseTime())
   .use(requestLogger('that:api:gateway').handler)
   .use(createUserContext)
