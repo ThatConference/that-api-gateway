@@ -1,10 +1,10 @@
 import _ from 'lodash';
-import { ApolloServer } from 'apollo-server-cloud-functions';
+import { ApolloServer } from 'apollo-server-express';
 import { ApolloGateway, RemoteGraphQLDataSource } from '@apollo/gateway';
 import debug from 'debug';
 import { graph } from '@thatconference/api';
 
-import config from '../envConfig';
+import config from './envConfig';
 
 const dlog = debug('that:api:gateway:graphql');
 const { lifecycle } = graph.events;
