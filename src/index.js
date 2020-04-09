@@ -52,7 +52,16 @@ function createUserContext(req, res, next) {
 
 async function schemaRefresh(req, res) {
   dlog('Refreshing Gateway Schemas');
-  await graphServer.config.gateway.load();
+
+  const { schema, executor } = await graphServer.config.gateway.load();
+  const schemaDerivedData = await graphServer.generateSchemaDerivedData(schema);
+
+  graphServer.schema = schema;
+  graphServer.schemaDerivedData = schemaDerivedData;
+  graphServer.config.schema = schema;
+  graphServer.config.executor = executor;
+  graphServer.requestOptions.executor = executor;
+
   res.json({ status: 'reloaded' });
 }
 
