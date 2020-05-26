@@ -64,7 +64,12 @@ const createServer = new ApolloServer({
   subscriptions: false,
   engine: false,
   introspection: config.apollo.introspection,
-  playground: config.apollo.playground,
+  playground: {
+    settings: {
+      'schema.polling.enable': false,
+      'schema.disableComments': false,
+    },
+  },
   context: ({ req: { userContext } }) => userContext,
 
   plugins: [
