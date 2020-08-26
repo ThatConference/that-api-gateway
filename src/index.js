@@ -46,6 +46,11 @@ function createUserContext(req, res, next) {
       ? req.headers['that-enable-mocks']
       : false,
   };
+  if (req.headers['that-site']) req.userContext.site = req.headers['that-site'];
+  if (req.headers.referer) req.userContext.referer = req.headers.referer;
+
+  dlog('headers %O', req.headers);
+  dlog('userContext %O', req.userContext);
 
   next();
 }
