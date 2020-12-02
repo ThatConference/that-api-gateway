@@ -29,6 +29,7 @@ const requiredConfig = () => {
         process.env.THAT_API_SESSIONS || missingConfig('THAT_API_SESSIONS'),
       members:
         process.env.THAT_API_MEMBERS || missingConfig('THAT_API_MEMBERS'),
+      garage: process.env.THAT_API_GARAGE || missingConfig('THAT_API_GARAGE'),
     },
 
     apollo: {

@@ -52,6 +52,10 @@ const createGateway = new ApolloGateway({
       name: 'Members',
       url: config.servicesList.members,
     }, // port: 8004
+    {
+      name: 'Garage',
+      url: config.servicesList.garage,
+    }, // port: 8005
   ],
 
   // for every child service we want to add information to the request header.
