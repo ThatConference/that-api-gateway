@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import { isNil } from 'lodash';
 import { ApolloServer } from 'apollo-server-express';
 import { ApolloGateway, RemoteGraphQLDataSource } from '@apollo/gateway';
 import debug from 'debug';
@@ -19,7 +19,7 @@ class AuthenticatedDataSource extends RemoteGraphQLDataSource {
   willSendRequest({ request, context }) {
     dlog('sending request %s', request.http.url);
 
-    if (!_.isNil(context)) {
+    if (!isNil(context)) {
       dlog('user has context, calling child services, and setting headers');
 
       request.http.headers.set('that-enable-mocks', context.enableMocks);
@@ -71,12 +71,14 @@ const createServer = new ApolloServer({
   subscriptions: false,
   engine: false,
   introspection: config.apollo.introspection,
-  playground: {
-    settings: {
-      'schema.polling.enable': false,
-      'schema.disableComments': false,
-    },
-  },
+  playground: config.apollo.playground
+    ? {
+        settings: {
+          'schema.polling.enable': false,
+          'schema.disableComments': false,
+        },
+      }
+    : false,
   context: ({ req: { userContext } }) => userContext,
 
   plugins: [
