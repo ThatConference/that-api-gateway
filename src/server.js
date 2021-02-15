@@ -27,8 +27,10 @@ class AuthenticatedDataSource extends RemoteGraphQLDataSource {
         request.http.headers.set('Authorization', context.authToken);
       if (context.correlationId)
         request.http.headers.set('that-correlation-id', context.correlationId);
-      if (context.referer)
+      if (context.referer) {
         request.http.headers.set('X-Forwarded-For', context.referer);
+        request.http.headers.set('that-forwarded-for', context.referer);
+      }
       if (context.site) request.http.headers.set('that-site', context.site);
     }
   }
@@ -83,7 +85,7 @@ const createServer = new ApolloServer({
 
   plugins: [
     {
-      requestDidStart(req) {
+      requestDidStart() {
         return {
           executionDidStart(requestContext) {
             dlog('incoming query \r\n %s', requestContext.source);

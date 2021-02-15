@@ -39,6 +39,7 @@ function createUserContext(req, res, next) {
 
   Sentry.configureScope(scope => {
     scope.setTag('correlationId', correlationId);
+    scope.setContext('headers', { headers: req.headers });
   });
 
   req.userContext = {
@@ -51,8 +52,8 @@ function createUserContext(req, res, next) {
   if (req.headers['that-site']) req.userContext.site = req.headers['that-site'];
   if (req.headers.referer) req.userContext.referer = req.headers.referer;
 
-  dlog('headers %O', req.headers);
-  dlog('userContext %O', req.userContext);
+  dlog('headers %o', req.headers);
+  dlog('userContext %o', req.userContext);
 
   next();
 }
