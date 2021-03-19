@@ -30,6 +30,9 @@ const requiredConfig = () => {
       members:
         process.env.THAT_API_MEMBERS || missingConfig('THAT_API_MEMBERS'),
       garage: process.env.THAT_API_GARAGE || missingConfig('THAT_API_GARAGE'),
+      communications:
+        process.env.THAT_API_COMMUNICATIONS ||
+        missingConfig('THAT_API_COMMUNICATIONS'),
     },
 
     apollo: {

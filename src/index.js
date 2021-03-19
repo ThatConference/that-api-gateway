@@ -45,9 +45,7 @@ function createUserContext(req, res, next) {
   req.userContext = {
     authToken: req.headers.authorization,
     correlationId,
-    enableMocks: req.headers['that-enable-mocks']
-      ? req.headers['that-enable-mocks']
-      : false,
+    enableMocks: false,
   };
   if (req.headers['that-site']) req.userContext.site = req.headers['that-site'];
   if (req.headers.referer) req.userContext.referer = req.headers.referer;
@@ -61,7 +59,10 @@ function createUserContext(req, res, next) {
 async function schemaRefresh(req, res) {
   dlog('Refreshing Gateway Schemas');
 
-  const { schema, executor } = await graphServer.config.gateway.load();
+  dlog('graphServer.config.gateway.load()');
+  const { schema, executor } = await graphServer.config.gateway.load({});
+
+  dlog('graphServer.generateSchemaDerivedData(schema)');
   const schemaDerivedData = await graphServer.generateSchemaDerivedData(schema);
 
   graphServer.schema = schema;
