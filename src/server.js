@@ -2,12 +2,10 @@ import { isNil } from 'lodash';
 import { ApolloServer } from 'apollo-server-express';
 import { ApolloGateway, RemoteGraphQLDataSource } from '@apollo/gateway';
 import debug from 'debug';
-import { graph } from '@thatconference/api';
 
 import config from './envConfig';
 
 const dlog = debug('that:api:gateway:graphql');
-const { lifecycle } = graph.events;
 
 class AuthenticatedDataSource extends RemoteGraphQLDataSource {
   constructor(url) {
@@ -58,6 +56,10 @@ const createGateway = new ApolloGateway({
       name: 'Garage',
       url: config.servicesList.garage,
     }, // port: 8005
+    {
+      name: 'Communications',
+      url: config.servicesList.communications,
+    }, // port: 8006
   ],
 
   // for every child service we want to add information to the request header.
@@ -83,22 +85,7 @@ const createServer = new ApolloServer({
     : false,
   context: ({ req: { userContext } }) => userContext,
 
-  plugins: [
-    {
-      requestDidStart() {
-        return {
-          executionDidStart(requestContext) {
-            dlog('incoming query \r\n %s', requestContext.source);
-
-            lifecycle.emit('executionDidStart', {
-              service: 'that:api:gateway',
-              requestContext,
-            });
-          },
-        };
-      },
-    },
-  ],
+  plugins: [],
 });
 
 export default createServer;

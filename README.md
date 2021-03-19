@@ -12,6 +12,7 @@
 | [that-api-partners](https://github.com/ThatConference/that-api-partners) | [![Actions Status](https://github.com/ThatConference/that-api-partners/workflows/Push%20Master%20CI%20for%20Cloud%20Run/badge.svg)](https://github.com/ThatConference/that-api-partners/actions) |
 | [that-api-sessions](https://github.com/ThatConference/that-api-sessions) | [![Actions Status](https://github.com/ThatConference/that-api-sessions/workflows/Push%20Master%20CI%20for%20Google%20Cloud%20Run/badge.svg)](https://github.com/ThatConference/that-api-sessions/actions) |
 | [that-api-garage](https://github.com/ThatConference/that-api-sessions) | [![Actions Status](https://github.com/ThatConference/that-api-garage/workflows/Push%20Master%20CI%20for%20Cloud%20Run/badge.svg)](https://github.com/ThatConference/that-api-sessions/actions) |
+| [that-api-communications](https://github.com/ThatConference/that-api-communications) | [![Push Main CI for Cloud Run](https://github.com/ThatConference/that-api-communications/actions/workflows/pushMainCi_GRun.yml/badge.svg)](https://github.com/ThatConference/that-api-communications/actions/workflows/pushMainCi_GRun.yml)|
 
 ## assumptions
 
