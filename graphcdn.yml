@@ -1,0 +1,6 @@
+# GraphCDN configuration. Learn more at https://www.notion.so/graphcdn-yml-46b7b95693f64a3bb5d14da732154fe8
+app: that
+schema: https://gateway-bgydxslf5a-uc.a.run.app
+originUrl: https://gateway-bgydxslf5a-uc.a.run.app
+scopes:
+  AUTHENTICATED: header:Authorization
