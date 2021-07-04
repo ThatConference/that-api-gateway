@@ -80,7 +80,7 @@ jobs:
           C_CNT=$(cat __build__/ccnt.txt)
           SENTRYREL=SENTRY_VERSION=that-api-members@$(cat __build__/package.json | jq '.version' | tr -d '"')-$C_CNT.$(echo $GITHUB_SHA | cut -c1-7)
           GCR_ENV_VARS="${GCR_ENV_VARS}, ${SENTRYREL}"
-          gcloud run deploy gateway --image us.gcr.io/${{ secrets.GCP_PROJECT_ID }}/gateway --region=us-central1 --platform=managed --allow-unauthenticated --set-env-vars="$GCR_ENV_VARS" --timeout=300 --memory=256Mi --cpu=1
+          gcloud run deploy gateway --image us.gcr.io/${{ secrets.GCP_PROJECT_ID }}/gateway --region=us-central1 --platform=managed --allow-unauthenticated --set-env-vars="$GCR_ENV_VARS" --timeout=300 --memory=256Mi --cpu=1 --min-instances=1
         env:
           CLOUDSDK_CORE_PROJECT: ${{ secrets.GCP_PROJECT_ID }}
       - name: Slack Notification

@@ -16,11 +16,23 @@ rules:
     maxAge: 0
     scope: PUBLIC
     types:
+      # events
       MeEventAccessQuery: true
+      # members
       MembersQuery:
         isProfileSlugTaken: true
+      # communications  
       CommunicationsQuery:
         check: true
+      # garage
+      MePortal: true
+      OrdersQuery:
+        all: true
+        order: true
+      # sessions
+      AdminSessionsQuery: true
+      VotingQuery:
+        isVotingOpen: true
   - description: special Caboodle cache time
     swr: 120
     maxAge: 30
@@ -54,7 +66,8 @@ rules:
       Order: true
       OrderAllocation: true
       MeOrder: true
-      Product: true
+      MeOrdersQuery: true
+      MeAssetsQuery: true
       PublicOrderAllocation: true
       # events
       MeEventQuery: true
@@ -64,6 +77,5 @@ rules:
       MePartnerQuery: true
       # sessions
       SessionAdminFields: true
-      AdminSessionsQuery: true
       MeQuery: true
       VotingQuery: true
