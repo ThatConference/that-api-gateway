@@ -1,7 +1,6 @@
 import 'dotenv/config';
 import express from 'express';
 import debug from 'debug';
-import { middleware } from '@thatconference/api';
 
 import responseTime from 'response-time';
 import * as Sentry from '@sentry/node';
@@ -13,7 +12,6 @@ import config from './envConfig';
 
 const dlog = debug('that:api:gateway:index');
 dlog('graph api started');
-const { requestLogger } = middleware;
 
 const api = express();
 
@@ -86,14 +84,22 @@ function failure(err, req, res, next) {
 
 api
   .use(responseTime())
-  .use(requestLogger('that:api:gateway').handler)
   .use(createUserContext)
   .use('/.internal/apollo/schema-refresh', schemaRefresh)
   .use('/view', voyagerMiddleware({ endpointUrl: '/graphql' }))
   .use(failure);
 
+const port = process.env.PORT || 8000;
+graphServer.start().then(() => {
+  graphServer.applyMiddleware({ app: api, path: '/' });
+  api.listen({ port }, () =>
+    // eslint-disable-next-line no-console
+    console.log(`✨Gateway 🌉 is running 🏃‍♂️ on port 🚢 ${port}`),
+  );
+});
+
 graphServer.applyMiddleware({ app: api, path: '/' });
 // const port = process.env.PORT || 8000;
 // api.listen({ port }, () => dlog(`gateway running on %d`, port));
 
-export const handler = api;
+// export const handler = api;

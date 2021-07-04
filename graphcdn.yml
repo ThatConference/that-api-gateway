@@ -1,6 +1,81 @@
-# GraphCDN configuration. Learn more at https://www.notion.so/graphcdn-yml-46b7b95693f64a3bb5d14da732154fe8
 app: that
 schema: https://gateway-bgydxslf5a-uc.a.run.app
 originUrl: https://gateway-bgydxslf5a-uc.a.run.app
 scopes:
   AUTHENTICATED: header:Authorization
+name: that
+rules:
+  - description: Default cache config
+    maxAge: 900
+    swr: 900
+    
+    types:
+      Query: true
+  - description: don't cache public
+    swr: 0
+    maxAge: 0
+    scope: PUBLIC
+    types:
+      # events
+      MeEventAccessQuery: true
+      # members
+      MembersQuery:
+        isProfileSlugTaken: true
+      # communications  
+      CommunicationsQuery:
+        check: true
+      # garage
+      MePortal: true
+      OrdersQuery:
+        all: true
+        order: true
+      # sessions
+      AdminSessionsQuery: true
+      VotingQuery:
+        isVotingOpen: true
+  - description: special Caboodle cache time
+    swr: 120
+    maxAge: 30
+    scope: AUTHENTICATED
+    types:
+      CaboodleQuery: true
+  - description: Reduced cache, calculated fields
+    swr: 300
+    maxAge: 60
+    scope: PUBLIC
+    types:
+      Panel:
+        favoriteCount: true
+      Regular:
+        favoriteCount: true
+      Workshop:
+        favoriteCount: true
+      OpenSpace:
+        favoriteCount: true
+
+  - description: Authenticated cache config
+    scope: AUTHENTICATED
+    swr: 600
+    maxAge: 120
+    types:
+      # members
+      Profile: true
+      DiscountCode: true
+      MemberFollowingQuery: true
+      # garage
+      Order: true
+      OrderAllocation: true
+      MeOrder: true
+      MeOrdersQuery: true
+      MeAssetsQuery: true
+      PublicOrderAllocation: true
+      # events
+      MeEventQuery: true
+      MeEventFavoritesQuery: true
+      MeCommunityFavoritesQuery: true
+      # partners
+      MePartnerQuery: true
+      # sessions
+      SessionAdminFields: true
+      MeQuery: true
+      VotingQuery: true
