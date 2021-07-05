@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import 'dotenv/config';
 import express from 'express';
 import debug from 'debug';
@@ -90,15 +91,19 @@ api
   .use(failure);
 
 const port = process.env.PORT || 8000;
-graphServer.start().then(() => {
-  graphServer.applyMiddleware({ app: api, path: '/' });
-  api.listen({ port }, () =>
-    // eslint-disable-next-line no-console
-    console.log(`✨Gateway 🌉 is running 🏃‍♂️ on port 🚢 ${port}`),
-  );
-});
+graphServer
+  .start()
+  .then(() => {
+    graphServer.applyMiddleware({ app: api, path: '/' });
+    api.listen({ port }, () =>
+      console.log(`✨Gateway 🌉 is running 🏃‍♂️ on port 🚢 ${port}`),
+    );
+  })
+  .catch(err => {
+    console.log(`graphServer.start() error 💥: ${err.message}`);
+    throw err;
+  });
 
-graphServer.applyMiddleware({ app: api, path: '/' });
 // const port = process.env.PORT || 8000;
 // api.listen({ port }, () => dlog(`gateway running on %d`, port));
 
