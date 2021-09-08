@@ -68,6 +68,7 @@ const createGateway = new ApolloGateway({
     return new AuthenticatedDataSource(url);
   },
   debug: config.apollo.debug,
+  serviceHealthCheck: true,
 });
 
 const createServer = new ApolloServer({
