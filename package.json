@@ -41,7 +41,7 @@
     "@apollo/gateway": "0.22.0",
     "@sentry/node": "^6.12.0",
     "@thatconference/api": "~2.0.4",
-    "apollo-server-express": "3.3.0",
+    "apollo-server-express": "2.22.2",
     "cors": "^2.8.5",
     "debug": "^4.3.2",
     "dotenv": "^10.0.0",
