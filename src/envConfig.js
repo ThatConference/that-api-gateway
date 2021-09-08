@@ -1,6 +1,6 @@
+/* eslint-disable import/no-unresolved */
 import debug from 'debug';
 
-// import { version } from '../package.json';
 let version;
 (async () => {
   let p;

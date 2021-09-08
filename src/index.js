@@ -77,6 +77,7 @@ function failure(err, req, res, next) {
   dlog('middleware error %O', err);
   Sentry.captureException(err);
 
+  // eslint-disable-next-line prettier/prettier
   res
     .set('Content-Type', 'application/json')
     .status(500)

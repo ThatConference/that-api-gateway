@@ -34,7 +34,8 @@
     "test": "jest --coverage --passWithNoTests",
     "test:watch": "cross-env  jest --watchAll",
     "lint": "eslint 'src/**/*.js'",
-    "validate": "concurrently npm:test npm:lint npm:build"
+    "validate": "concurrently npm:test npm:lint npm:build",
+    "prepare": "husky install"
   },
   "dependencies": {
     "@apollo/gateway": "0.22.0",
@@ -70,16 +71,11 @@
     "eslint-plugin-jest": "^24.4.0",
     "eslint-plugin-prettier": "^4.0.0",
     "graphcdn": "^1.2.0",
-    "husky": "^4.3.8",
+    "husky": "^7.0.0",
     "jest-cli": "^27.1.0",
     "nodemon": "^2.0.12",
     "prettier-eslint": "^13.0.0",
     "prettier-eslint-cli": "^5.0.1"
-  },
-  "husky": {
-    "hooks": {
-      "pre-push": "npm run validate"
-    }
   },
   "jest": {
     "testEnvironment": "node",
