@@ -1,10 +1,10 @@
 {
   "name": "that-api-gateway",
-  "version": "1.4.0",
+  "version": "2.0.0",
   "description": "THAT Apollo gateway",
   "main": "index.js",
   "engines": {
-    "node": "12.x"
+    "node": "14.x"
   },
   "scripts": {
     "build": "rimraf __build__ && babel ./src -d ./__build__ --copy-files --ignore ./**/__tests__",
@@ -34,52 +34,48 @@
     "test": "jest --coverage --passWithNoTests",
     "test:watch": "cross-env  jest --watchAll",
     "lint": "eslint 'src/**/*.js'",
-    "validate": "concurrently npm:test npm:lint npm:build"
+    "validate": "concurrently npm:test npm:lint npm:build",
+    "prepare": "husky install"
   },
   "dependencies": {
     "@apollo/gateway": "0.22.0",
-    "@sentry/node": "^6.8.0",
-    "@thatconference/api": "~1.24.0",
-    "apollo-server-express": "2.25.2",
+    "@sentry/node": "^6.12.0",
+    "@thatconference/api": "~2.0.4",
+    "apollo-server-express": "3.3.0",
     "cors": "^2.8.5",
-    "debug": "^4.3.1",
+    "debug": "^4.3.2",
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
-    "firebase-admin": "^9.7.0",
-    "firebase-functions": "^3.13.2",
-    "graphql": "^15.5.0",
+    "firebase-admin": "^9.11.1",
+    "firebase-functions": "^3.15.5",
+    "graphql": "^15.5.3",
     "graphql-voyager": "1.0.0-rc.31",
     "lodash": "^4.17.21",
     "response-time": "^2.3.2",
     "uuid": "^8.3.2"
   },
   "devDependencies": {
-    "@babel/cli": "^7.13.16",
-    "@babel/core": "^7.14.0",
-    "@babel/node": "^7.13.13",
-    "@babel/preset-env": "^7.14.1",
-    "@babel/register": "^7.13.16",
+    "@babel/cli": "^7.15.4",
+    "@babel/core": "^7.15.5",
+    "@babel/node": "^7.15.4",
+    "@babel/preset-env": "^7.15.4",
+    "@babel/register": "^7.15.3",
     "babel-eslint": "^10.1.0",
-    "babel-jest": "^26.6.3",
-    "concurrently": "^6.1.0",
-    "eslint": "^7.26.0",
+    "babel-jest": "^27.1.0",
+    "concurrently": "^6.2.1",
+    "eslint": "^7.32.0",
     "eslint-config-airbnb-base": "^14.2.1",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-babel": "^5.3.1",
-    "eslint-plugin-import": "^2.22.1",
-    "eslint-plugin-jest": "^24.3.6",
-    "eslint-plugin-prettier": "^3.4.0",
-    "graphcdn": "^1.0.7",
-    "husky": "^4.3.8",
-    "jest-cli": "^26.6.3",
-    "nodemon": "^2.0.9",
-    "prettier-eslint": "^12.0.0",
+    "eslint-plugin-import": "^2.24.2",
+    "eslint-plugin-jest": "^24.4.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "graphcdn": "^1.2.0",
+    "husky": "^7.0.0",
+    "jest-cli": "^27.1.0",
+    "nodemon": "^2.0.12",
+    "prettier-eslint": "^13.0.0",
     "prettier-eslint-cli": "^5.0.1"
-  },
-  "husky": {
-    "hooks": {
-      "pre-push": "npm run validate"
-    }
   },
   "jest": {
     "testEnvironment": "node",
