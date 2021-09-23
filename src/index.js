@@ -1,6 +1,7 @@
 /* eslint-disable no-console */
 import 'dotenv/config';
 import express from 'express';
+import cors from 'cors';
 import debug from 'debug';
 
 import responseTime from 'response-time';
@@ -78,13 +79,11 @@ function failure(err, req, res, next) {
   Sentry.captureException(err);
 
   // eslint-disable-next-line prettier/prettier
-  res
-    .set('Content-Type', 'application/json')
-    .status(500)
-    .json(err);
+  res.set('Content-Type', 'application/json').status(500).json(err);
 }
 
 api
+  .use(cors())
   .use(responseTime())
   .use(createUserContext)
   .use('/.internal/apollo/schema-refresh', schemaRefresh)
