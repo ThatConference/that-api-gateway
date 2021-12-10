@@ -1,9 +1,8 @@
-app: that
+name: that
 schema: https://gateway-bgydxslf5a-uc.a.run.app
 originUrl: https://gateway-bgydxslf5a-uc.a.run.app
 scopes:
   AUTHENTICATED: header:Authorization
-name: that
 rules:
   - description: Default cache config
     maxAge: 900
