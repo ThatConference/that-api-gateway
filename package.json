@@ -1,6 +1,6 @@
 {
   "name": "that-api-gateway",
-  "version": "2.1.1",
+  "version": "2.1.2",
   "description": "THAT Apollo gateway",
   "main": "index.js",
   "engines": {
