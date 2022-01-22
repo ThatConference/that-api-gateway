@@ -31,7 +31,7 @@ jobs:
   
   notifications:
     name: Workflow notifications
-    needs: [build,deploy,refresh]
+    needs: [build,deploy]
     runs-on: ubuntu-latest
     steps:
       - name: Slack Notification
