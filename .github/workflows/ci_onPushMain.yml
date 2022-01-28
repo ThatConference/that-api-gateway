@@ -46,10 +46,13 @@ jobs:
       - name: Push to GraphCDN
         run: |
           cd __build__
-          npm ci
+          npm set-script prepare ""
+          npm ci --only=production
           npx graphcdn push
         env:
           GRAPHCDN_TOKEN: ${{ secrets.GRAPHCDN_TOKEN }}
+          CI: true
+          HUSKY: 0
 
 
   notifications:

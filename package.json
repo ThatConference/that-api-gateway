@@ -1,6 +1,6 @@
 {
   "name": "that-api-gateway",
-  "version": "2.2.0",
+  "version": "2.2.1",
   "description": "THAT Apollo gateway",
   "main": "index.js",
   "engines": {
@@ -48,6 +48,7 @@
     "dotenv": "^14.3.2",
     "express": "^4.17.2",
     "firebase-admin": "^10.0.2",
+    "graphcdn": "^1.7.0",
     "graphql": "^15.8.0",
     "graphql-voyager": "1.0.0-rc.31",
     "lodash": "^4.17.21",
@@ -70,7 +71,6 @@
     "eslint-plugin-import": "^2.25.4",
     "eslint-plugin-jest": "^26.0.0",
     "eslint-plugin-prettier": "^4.0.0",
-    "graphcdn": "~1.7.0",
     "husky": "^7.0.4",
     "jest-cli": "^27.4.7",
     "nodemon": "^2.0.15",
