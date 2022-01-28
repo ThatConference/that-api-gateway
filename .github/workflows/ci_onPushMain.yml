@@ -45,9 +45,9 @@ jobs:
           node-version: 14
       - name: Push to GraphCDN
         run: |
+          npm version
           cd __build__
-          npm set-script prepare ""
-          npm ci --only=production
+          npm ci --only=production --ignore-scripts
           npx graphcdn push
         env:
           GRAPHCDN_TOKEN: ${{ secrets.GRAPHCDN_TOKEN }}
