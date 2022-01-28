@@ -6,11 +6,11 @@ scopes:
 rules:
   - description: Default cache config
     maxAge: 900
-    swr: 900
+    swr: 1200
     types:
       - Query
 
-  - description: don't cache public
+  - description: don't cache these public
     swr: 0
     maxAge: 0
     scope: PUBLIC
