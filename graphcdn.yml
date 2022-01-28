@@ -6,11 +6,11 @@ scopes:
 rules:
   - description: Default cache config
     maxAge: 900
-    swr: 900
-    
+    swr: 1200
     types:
-      Query: true
-  - description: don't cache public
+      - Query
+
+  - description: don't cache these public
     swr: 0
     maxAge: 0
     scope: PUBLIC
@@ -32,12 +32,14 @@ rules:
       AdminSessionsQuery: true
       VotingQuery:
         isVotingOpen: true
+
   - description: special Caboodle cache time
     swr: 120
     maxAge: 30
     scope: AUTHENTICATED
     types:
       CaboodleQuery: true
+
   - description: Reduced cache, calculated fields
     swr: 300
     maxAge: 60
