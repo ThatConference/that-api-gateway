@@ -30,7 +30,7 @@ jobs:
       SLACK_WEBHOOK_DEV_NOTIFICATIONS: ${{ secrets.SLACK_WEBHOOK_DEV_NOTIFICATIONS }}
   
   graphcdn:
-    name: Update GraphCDN rules
+    name: Push GraphCDN rules
     runs-on: ubuntu-latest
     needs: [build, deploy]
     steps:
@@ -47,7 +47,6 @@ jobs:
         run: |
           npm version
           cd __build__
-          npm ci --only=production --ignore-scripts
           npx graphcdn push
         env:
           GRAPHCDN_TOKEN: ${{ secrets.GRAPHCDN_TOKEN }}
