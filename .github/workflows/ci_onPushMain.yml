@@ -47,6 +47,7 @@ jobs:
         run: |
           npm version
           cd __build__
+          npx graphcdn version
           npx graphcdn push
         env:
           GRAPHCDN_TOKEN: ${{ secrets.GRAPHCDN_TOKEN }}
