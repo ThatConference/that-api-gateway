@@ -23,6 +23,14 @@ rules:
       # communications  
       CommunicationsQuery:
         check: true
+
+  - description: don't cache these authenticated
+    swr: 0
+    maxAge: 0
+    scope: AUTHENTICATED
+    types:
+      # members
+      Profile: true
       # garage
       MePortal: true
       OrdersQuery:
@@ -32,6 +40,7 @@ rules:
       AdminSessionsQuery: true
       VotingQuery:
         isVotingOpen: true
+      MeOrdersMutation: true
 
   - description: special Caboodle cache time
     swr: 120
@@ -60,7 +69,6 @@ rules:
     maxAge: 120
     types:
       # members
-      Profile: true
       DiscountCode: true
       MemberFollowingQuery: true
       # garage
