@@ -5,8 +5,8 @@ scopes:
   AUTHENTICATED: header:Authorization
 rules:
   - description: Default cache config
-    maxAge: 900
-    swr: 1200
+    maxAge: 1800
+    swr: 2700
     types:
       - Query
 
@@ -29,8 +29,6 @@ rules:
     maxAge: 0
     scope: AUTHENTICATED
     types:
-      # members
-      Profile: true
       # garage
       MePortal: true
       OrdersQuery:
