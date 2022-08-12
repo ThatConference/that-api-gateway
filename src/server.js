@@ -5,6 +5,7 @@ import {
   IntrospectAndCompose,
   RemoteGraphQLDataSource,
 } from '@apollo/gateway';
+import { ApolloServerPluginLandingPageGraphQLPlayground } from 'apollo-server-core';
 import debug from 'debug';
 
 import config from './envConfig';
@@ -13,7 +14,7 @@ const dlog = debug('that:api:gateway:graphql');
 
 class AuthenticatedDataSource extends RemoteGraphQLDataSource {
   constructor(url) {
-    dlog('constructor');
+    dlog('AuthenticatedDataSource constructor');
     super({ url });
   }
 
@@ -24,7 +25,10 @@ class AuthenticatedDataSource extends RemoteGraphQLDataSource {
     if (!isNil(context)) {
       dlog('user has context, calling child services, and setting headers');
 
-      request.http.headers.set('that-enable-mocks', context.enableMocks);
+      request.http.headers.set(
+        'that-enable-mocks',
+        context.enableMocks ?? false,
+      );
       if (context.authToken)
         request.http.headers.set('Authorization', context.authToken);
       if (context.correlationId)
@@ -70,7 +74,7 @@ const createGateway = new ApolloGateway({
 
   // for every child service we want to add information to the request header.
   buildService({ name, url }) {
-    dlog(`building schema for ${name} : ${url}`);
+    dlog(`composing federation: building schema for ${name} : ${url}`);
     return new AuthenticatedDataSource(url);
   },
   debug: config.apollo.debug,
@@ -82,17 +86,15 @@ const createServer = new ApolloServer({
   subscriptions: false,
   engine: false,
   introspection: config.apollo.introspection,
-  playground: config.apollo.playground
-    ? {
-        settings: {
-          'schema.polling.enable': false,
-          'schema.disableComments': false,
-        },
-      }
-    : false,
   context: ({ req: { userContext } }) => userContext,
-
-  plugins: [],
+  plugins: [
+    ApolloServerPluginLandingPageGraphQLPlayground({
+      settings: {
+        'schema.polling.enable': false,
+        'schema.disableComments': false,
+      },
+    }),
+  ],
 });
 
 export default createServer;
