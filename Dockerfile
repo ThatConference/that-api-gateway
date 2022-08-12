@@ -1,6 +1,6 @@
 # THAT gateway Dockerfile
 
-FROM node:14-alpine3.14
+FROM node:16-alpine
 
 # Create and change to app directory
 WORKDIR /usr/src/that
@@ -9,6 +9,8 @@ WORKDIR /usr/src/that
 COPY __build__ ./
 
 # install production node_modules
-RUN npm install --production
+# set-script prepare '' removes Husky from prepare. Docker/node16 bug
+RUN npm set-script prepare '' \
+  && npm install --omit=dev
 
 CMD [ "npm", "start" ]

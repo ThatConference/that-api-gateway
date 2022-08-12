@@ -6,7 +6,7 @@ import debug from 'debug';
 import responseTime from 'response-time';
 import * as Sentry from '@sentry/node';
 import { v4 as uuidv4 } from 'uuid';
-import { express as voyagerMiddleware } from 'graphql-voyager/middleware';
+// import { express as voyagerMiddleware } from 'graphql-voyager/middleware';
 
 import graphServer from './server';
 import config from './envConfig';
@@ -56,21 +56,21 @@ function createUserContext(req, res, next) {
 }
 
 async function schemaRefresh(req, res) {
-  dlog('Refreshing Gateway Schemas');
+  // dlog('Refreshing Gateway Schemas');
 
-  dlog('graphServer.config.gateway.load()');
-  const { schema, executor } = await graphServer.config.gateway.load({});
+  // dlog('graphServer.config.gateway.load()');
+  // const { schema, executor } = await graphServer.config.gateway.load({});
 
-  dlog('graphServer.generateSchemaDerivedData(schema)');
-  const schemaDerivedData = await graphServer.generateSchemaDerivedData(schema);
+  // dlog('graphServer.generateSchemaDerivedData(schema)');
+  // const schemaDerivedData = await graphServer.generateSchemaDerivedData(schema);
 
-  graphServer.schema = schema;
-  graphServer.schemaDerivedData = schemaDerivedData;
-  graphServer.config.schema = schema;
-  graphServer.config.executor = executor;
-  graphServer.requestOptions.executor = executor;
+  // graphServer.schema = schema;
+  // graphServer.schemaDerivedData = schemaDerivedData;
+  // graphServer.config.schema = schema;
+  // graphServer.config.executor = executor;
+  // graphServer.requestOptions.executor = executor;
 
-  res.json({ status: 'reloaded' });
+  res.json({ status: 'Refresh Not Enabled' });
 }
 
 function failure(err, req, res, next) {
@@ -86,7 +86,7 @@ api
   .use(responseTime())
   .use(createUserContext)
   .use('/.internal/apollo/schema-refresh', schemaRefresh)
-  .use('/view', voyagerMiddleware({ endpointUrl: '/graphql' }))
+  // .use('/view', voyagerMiddleware({ endpointUrl: '/graphql' }))
   .use(failure);
 
 const port = process.env.PORT || 8000;
