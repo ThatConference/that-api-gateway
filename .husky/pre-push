@@ -2,5 +2,5 @@
 . "$(dirname "$0")/_/husky.sh"
 
 npm run validate
-npx graphcdn version
-npx graphcdn push
+npx stellate version
+npx stellate push

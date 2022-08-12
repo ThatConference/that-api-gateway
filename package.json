@@ -1,6 +1,6 @@
 {
   "name": "that-api-gateway",
-  "version": "3.0.0",
+  "version": "3.1.0",
   "description": "THAT Apollo gateway",
   "main": "index.js",
   "engines": {
@@ -8,7 +8,7 @@
   },
   "scripts": {
     "build": "rimraf __build__ && babel ./src -d ./__build__ --copy-files --ignore ./**/__tests__",
-    "postbuild": "cp .env package* graphcdn.yml __build__",
+    "postbuild": "cp .env package* stellate.yml __build__",
     "predeploy:api:graphEndpoint": "npm run build",
     "deploy:api:graphEndpoint": "cd __build__ && node index.js",
     "start:watch:api:graphApi": "nodemon -e env,js,json,graphql --watch src --ignore '*.test.js' --exec npm run deploy:api:graphEndpoint",
@@ -70,12 +70,12 @@
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-jest": "^26.8.2",
     "eslint-plugin-prettier": "^4.2.1",
-    "graphcdn": "~1.12.0",
     "husky": "^8.0.1",
     "jest-cli": "^28.1.3",
     "nodemon": "^2.0.19",
     "prettier-eslint": "^15.0.1",
-    "prettier-eslint-cli": "~5.0.1"
+    "prettier-eslint-cli": "~5.0.1",
+    "stellate": "^1.16.0"
   },
   "jest": {
     "testEnvironment": "node",

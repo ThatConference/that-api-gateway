@@ -13,6 +13,7 @@ jobs:
       apiName: gateway
       isForDeploy: true
       branchName: ${{ github.ref_name }}
+      nodeVersion: 16
     secrets:
       SLACK_WEBHOOK_DEV_NOTIFICATIONS: ${{ secrets.SLACK_WEBHOOK_DEV_NOTIFICATIONS }}
 
@@ -29,8 +30,8 @@ jobs:
       GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
       SLACK_WEBHOOK_DEV_NOTIFICATIONS: ${{ secrets.SLACK_WEBHOOK_DEV_NOTIFICATIONS }}
   
-  graphcdn:
-    name: Push GraphCDN rules
+  stellate:
+    name: Push Stellate rules
     runs-on: ubuntu-latest
     needs: [build, deploy]
     steps:
@@ -39,18 +40,18 @@ jobs:
         with:
           name: tc-api
           path: __build__
-      - name: Use node.js 14x
-        uses: actions/setup-node@v2
+      - name: Use node.js 16x
+        uses: actions/setup-node@v3
         with:
-          node-version: 14
-      - name: Push to GraphCDN
+          node-version: 16
+      - name: Push to Stellate
         run: |
           npm version
           cd __build__
-          npx graphcdn version
-          npx graphcdn push
+          npx stellate version
+          npx stellate push
         env:
-          GRAPHCDN_TOKEN: ${{ secrets.GRAPHCDN_TOKEN }}
+          STELLATE_TOKEN: ${{ secrets.STELLATE_TOKEN }}
           CI: true
           HUSKY: 0
 
