@@ -10,7 +10,7 @@ COPY __build__ ./
 
 # install production node_modules
 # set-script prepare '' removes Husky from prepare. Docker/node16 bug
-RUN npm set-script prepare '' \
+RUN npm pkg delete scripts.prepare \
   && npm install --omit=dev
 
 CMD [ "npm", "start" ]
