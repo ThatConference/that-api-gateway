@@ -1,6 +1,6 @@
 {
   "name": "that-api-gateway",
-  "version": "3.1.1",
+  "version": "3.2.0",
   "description": "THAT Apollo gateway",
   "main": "index.js",
   "engines": {
@@ -38,9 +38,9 @@
     "prepare": "husky install"
   },
   "dependencies": {
-    "@apollo/gateway": "^2.1.0",
+    "@apollo/gateway": "^2.1.1",
     "@google-cloud/trace-agent": "^7.1.1",
-    "@sentry/node": "^7.11.1",
+    "@sentry/node": "^7.12.1",
     "@thatconference/api": "~3.0.2",
     "apollo-server-core": "^3.10.2",
     "apollo-server-express": "^3.10.2",
@@ -52,30 +52,30 @@
     "graphql": "^16.6.0",
     "lodash": "^4.17.21",
     "response-time": "^2.3.2",
-    "uuid": "^8.3.2"
+    "uuid": "^9.0.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.18.10",
-    "@babel/core": "^7.18.13",
+    "@babel/core": "^7.19.0",
     "@babel/node": "^7.18.10",
-    "@babel/preset-env": "^7.18.10",
+    "@babel/preset-env": "^7.19.0",
     "@babel/register": "^7.18.9",
     "babel-eslint": "^10.1.0",
-    "babel-jest": "^29.0.1",
-    "concurrently": "^7.3.0",
+    "babel-jest": "^29.0.3",
+    "concurrently": "^7.4.0",
     "eslint": "^7.32.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-babel": "^5.3.1",
     "eslint-plugin-import": "^2.26.0",
-    "eslint-plugin-jest": "^26.9.0",
+    "eslint-plugin-jest": "^27.0.4",
     "eslint-plugin-prettier": "^4.2.1",
     "husky": "^8.0.1",
-    "jest-cli": "^29.0.1",
+    "jest-cli": "^29.0.3",
     "nodemon": "^2.0.19",
     "prettier-eslint": "^15.0.1",
     "prettier-eslint-cli": "~7.1.0",
-    "stellate": "^1.16.0"
+    "stellate": "^1.17.0"
   },
   "jest": {
     "testEnvironment": "node",
