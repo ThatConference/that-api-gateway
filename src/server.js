@@ -83,10 +83,20 @@ const createGateway = new ApolloGateway({
 
 const createServer = new ApolloServer({
   gateway: createGateway,
+  cache: 'bounded',
+  csrfPrevention: true,
   subscriptions: false,
   engine: false,
   introspection: config.apollo.introspection,
-  context: ({ req: { userContext } }) => userContext,
+  context: ({ req: { userContext }, res }) => ({ ...userContext, res }),
+  formatResponse: (response, { context: { res } }) => {
+    // dlog('response:: %O', response);
+    res.header({
+      'Strict-Transport-Security': 'max-age=31536000; includeSubDomains',
+      'X-Frame-Options': 'DENY',
+      'X-Content-Type-Options': 'nosniff',
+    });
+  },
   plugins: [
     ApolloServerPluginLandingPageGraphQLPlayground({
       settings: {
