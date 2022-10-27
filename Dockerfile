@@ -13,4 +13,4 @@ COPY __build__ ./
 RUN npm pkg delete scripts.prepare \
   && npm install --omit=dev
 
-CMD [ "npm", "start" ]
+CMD [ "node", "index.js" ]
