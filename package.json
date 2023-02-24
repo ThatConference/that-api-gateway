@@ -38,17 +38,17 @@
     "prepare": "husky install"
   },
   "dependencies": {
-    "@apollo/gateway": "^2.1.4",
+    "@apollo/gateway": "^2.3.2",
+    "@apollo/server": "^4.4.0",
+    "@apollo/server-plugin-landing-page-graphql-playground": "^4.0.0",
     "@google-cloud/trace-agent": "^7.1.2",
-    "@sentry/node": "^7.17.1",
-    "@thatconference/api": "~3.2.0",
-    "apollo-server-core": "^3.10.3",
-    "apollo-server-express": "^3.10.3",
+    "@sentry/node": "^7.38.0",
+    "@thatconference/api": "^4.0.0",
+    "body-parser": "^1.20.2",
     "cors": "^2.8.5",
     "debug": "^4.3.4",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
-    "firebase-admin": "^11.2.0",
     "graphql": "^16.6.0",
     "lodash": "^4.17.21",
     "response-time": "^2.3.2",
@@ -75,7 +75,7 @@
     "nodemon": "^2.0.20",
     "prettier-eslint": "^15.0.1",
     "prettier-eslint-cli": "~7.1.0",
-    "stellate": "^1.17.1"
+    "stellate": "^1.24.1"
   },
   "jest": {
     "testEnvironment": "node",
