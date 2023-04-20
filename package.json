@@ -38,12 +38,12 @@
     "prepare": "husky install"
   },
   "dependencies": {
-    "@apollo/gateway": "^2.4.0",
-    "@apollo/server": "^4.5.0",
+    "@apollo/gateway": "^2.4.1",
+    "@apollo/server": "^4.6.0",
     "@apollo/server-plugin-landing-page-graphql-playground": "^4.0.0",
     "@google-cloud/trace-agent": "^7.1.2",
-    "@sentry/node": "^7.45.0",
-    "@thatconference/api": "^4.0.1",
+    "@sentry/node": "^7.48.0",
+    "@thatconference/api": "^4.1.0",
     "body-parser": "^1.20.2",
     "cors": "^2.8.5",
     "debug": "^4.3.4",
@@ -56,15 +56,15 @@
   },
   "devDependencies": {
     "@babel/cli": "^7.21.0",
-    "@babel/core": "^7.21.3",
+    "@babel/core": "^7.21.4",
     "@babel/eslint-plugin": "^7.19.1",
     "@babel/node": "^7.20.7",
-    "@babel/preset-env": "^7.20.2",
+    "@babel/preset-env": "^7.21.4",
     "@babel/register": "^7.21.0",
     "babel-eslint": "^10.1.0",
     "babel-jest": "^29.5.0",
     "concurrently": "^8.0.1",
-    "eslint": "^8.37.0",
+    "eslint": "^8.38.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-config-prettier": "^8.8.0",
     "eslint-plugin-import": "^2.27.5",
@@ -75,7 +75,7 @@
     "nodemon": "^2.0.22",
     "prettier-eslint": "^15.0.1",
     "prettier-eslint-cli": "~7.1.0",
-    "stellate": "^1.27.0"
+    "stellate": "^1.28.2"
   },
   "jest": {
     "testEnvironment": "node",
