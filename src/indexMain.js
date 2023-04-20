@@ -1,14 +1,16 @@
 /* eslint-disable no-console */
 import express from 'express';
+import http from 'node:http';
 import cors from 'cors';
 import debug from 'debug';
 
 import responseTime from 'response-time';
 import * as Sentry from '@sentry/node';
 import { v4 as uuidv4 } from 'uuid';
-// import { express as voyagerMiddleware } from 'graphql-voyager/middleware';
+import { expressMiddleware } from '@apollo/server/express4';
+import { json as jsonBodyParser } from 'body-parser';
 
-import graphServer from './server';
+import createGraphQLServer from './server';
 import config from './envConfig';
 
 const dlog = debug('that:api:gateway:index');
@@ -55,45 +57,33 @@ function createUserContext(req, res, next) {
   next();
 }
 
-async function schemaRefresh(req, res) {
-  // dlog('Refreshing Gateway Schemas');
-
-  // dlog('graphServer.config.gateway.load()');
-  // const { schema, executor } = await graphServer.config.gateway.load({});
-
-  // dlog('graphServer.generateSchemaDerivedData(schema)');
-  // const schemaDerivedData = await graphServer.generateSchemaDerivedData(schema);
-
-  // graphServer.schema = schema;
-  // graphServer.schemaDerivedData = schemaDerivedData;
-  // graphServer.config.schema = schema;
-  // graphServer.config.executor = executor;
-  // graphServer.requestOptions.executor = executor;
-
-  res.json({ status: 'Refresh Not Enabled' });
-}
-
 function failure(err, req, res, next) {
   dlog('middleware error %O', err);
   Sentry.captureException(err);
 
-  // eslint-disable-next-line prettier/prettier
-  res.set('Content-Type', 'application/json').status(500).json(err);
+  res.status(500).json(err);
 }
 
-api
-  .use(cors())
-  .use(responseTime())
-  .use(createUserContext)
-  .use('/.internal/apollo/schema-refresh', schemaRefresh)
-  // .use('/view', voyagerMiddleware({ endpointUrl: '/graphql' }))
-  .use(failure);
-
+const httpServer = http.createServer(api);
+const graphServer = createGraphQLServer(httpServer);
 const port = process.env.PORT || 8000;
+api.use(Sentry.Handlers.requestHandler());
+api.use(cors(), responseTime(), jsonBodyParser());
+api.use(createUserContext);
+
 graphServer
   .start()
   .then(() => {
-    graphServer.applyMiddleware({ app: api, path: '/' });
+    api.use(
+      expressMiddleware(graphServer, {
+        context: async ({ req: { userContext }, res }) => ({
+          ...userContext,
+          res,
+        }),
+      }),
+    );
+    api.use(Sentry.Handlers.errorHandler());
+    api.use(failure);
     api.listen({ port }, () =>
       console.log(`✨Gateway 🌉 is running 🏃‍♂️ on port 🚢 ${port}`),
     );
@@ -102,8 +92,3 @@ graphServer
     console.log(`graphServer.start() error 💥: ${err.message}`);
     throw err;
   });
-
-// const port = process.env.PORT || 8000;
-// api.listen({ port }, () => dlog(`gateway running on %d`, port));
-
-// export const handler = api;
