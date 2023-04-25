@@ -50,6 +50,16 @@ function createUserContext(req, res, next) {
   };
   if (req.headers['that-site']) req.userContext.site = req.headers['that-site'];
   if (req.headers.referer) req.userContext.referer = req.headers.referer;
+  if (req.userContext.authToken?.toLowerCase()?.includes('basic')) {
+    Sentry.configureScope(scope => {
+      scope.setContext('user context', { userContext: req.userContext });
+      scope.setLevel('info');
+      scope.setContext('all headers', { headers: req.headers });
+      Sentry.captureMessage('Basic auth sent to api', {
+        auth: req.headers.authorization,
+      });
+    });
+  }
 
   dlog('headers %o', req.headers);
   dlog('userContext %o', req.userContext);
