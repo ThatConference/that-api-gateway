@@ -73,6 +73,10 @@ function createGraphQLServer(httpServer) {
           name: 'Communications',
           url: config.servicesList.communications,
         }, // port: 8006
+        {
+          name: 'Help',
+          url: config.servicesList.help,
+        }, // port: 8007
       ],
     }),
 

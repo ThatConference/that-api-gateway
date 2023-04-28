@@ -33,6 +33,7 @@ const requiredConfig = () => {
       communications:
         process.env.THAT_API_COMMUNICATIONS ||
         missingConfig('THAT_API_COMMUNICATIONS'),
+      help: process.env.THAT_API_HELP || missingConfig('THAT_API_HELP'),
     },
 
     apollo: {

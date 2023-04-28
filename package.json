@@ -1,6 +1,6 @@
 {
   "name": "that-api-gateway",
-  "version": "4.0.1",
+  "version": "4.2.0",
   "description": "THAT Apollo gateway",
   "main": "index.js",
   "engines": {
@@ -20,7 +20,8 @@
     "start:watch:members": "cd ../that-api-members && npm run start:watch",
     "start:watch:garage": "cd ../that-api-garage && npm run start:watch",
     "start:watch:communications": "cd ../that-api-communications && npm run start:watch",
-    "start:watch": "concurrently -n gateway,events,partners,sessions,members,garage,communications npm:start:watch:this npm:start:watch:events npm:start:watch:partners npm:start:watch:sessions npm:start:watch:members npm:start:watch:garage npm:start:watch:communications -c \"bgRed,bgGreen,bgCyan,bgYellow,bgMagenta,yellow,white\"",
+    "start:watch:help": "cd ../that-api-help && npm run start:watch",
+    "start:watch": "concurrently -n gateway,events,partners,sessions,members,garage,communications,help npm:start:watch:this npm:start:watch:events npm:start:watch:partners npm:start:watch:sessions npm:start:watch:members npm:start:watch:garage npm:start:watch:communications npm:start:watch:help -c \"bgRed,bgGreen,bgCyan,bgYellow,bgMagenta,yellow,white,green\"",
     "start:watch:raw": "concurrently npm:start:watch:this npm:start:watch:events npm:start:watch:partners npm:start:watch:sessions npm:start:watch:members npm:start:watch:garage npm:start:watch:communications --raw",
     "start": "node index.js",
     "i:gateway": "npm i",
@@ -30,6 +31,7 @@
     "i:sessions": "cd ../that-api-sessions && npm i",
     "i:garage": "cd ../that-api-garage && npm i",
     "i:communications": "cd ../that-api-communications && npm i",
+    "i:help": "cd ../that-api-help && npm i",
     "npm:i": "concurrently npm:i:* --raw",
     "test": "jest --coverage --passWithNoTests",
     "test:watch": "cross-env  jest --watchAll",
@@ -38,12 +40,12 @@
     "prepare": "husky install"
   },
   "dependencies": {
-    "@apollo/gateway": "^2.4.1",
-    "@apollo/server": "^4.6.0",
+    "@apollo/gateway": "^2.4.2",
+    "@apollo/server": "^4.7.0",
     "@apollo/server-plugin-landing-page-graphql-playground": "^4.0.0",
     "@google-cloud/trace-agent": "^7.1.2",
-    "@sentry/node": "^7.48.0",
-    "@thatconference/api": "^4.1.0",
+    "@sentry/node": "^7.50.0",
+    "@thatconference/api": "^4.2.0",
     "body-parser": "^1.20.2",
     "cors": "^2.8.5",
     "debug": "^4.3.4",
@@ -64,7 +66,7 @@
     "babel-eslint": "^10.1.0",
     "babel-jest": "^29.5.0",
     "concurrently": "^8.0.1",
-    "eslint": "^8.38.0",
+    "eslint": "^8.39.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-config-prettier": "^8.8.0",
     "eslint-plugin-import": "^2.27.5",
@@ -75,7 +77,7 @@
     "nodemon": "^2.0.22",
     "prettier-eslint": "^15.0.1",
     "prettier-eslint-cli": "~7.1.0",
-    "stellate": "^1.28.2"
+    "stellate": "^1.29.0"
   },
   "jest": {
     "testEnvironment": "node",
