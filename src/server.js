@@ -8,6 +8,7 @@ import {
   RemoteGraphQLDataSource,
 } from '@apollo/gateway';
 import debug from 'debug';
+import * as Sentry from '@sentry/node';
 
 import config from './envConfig';
 
@@ -102,6 +103,24 @@ function createGraphQLServer(httpServer) {
         'X-Frame-Options': 'DENY',
         'X-Content-Type-Options': 'nosniff',
       });
+    },
+    formatError: err => {
+      dlog('formatError %O', err);
+
+      Sentry.withScope(scope => {
+        scope.setTag('formatError', true);
+        scope.setLevel('warning');
+        scope.setContext('originalError', { originalError: err.originalError });
+        scope.setContext('path', { path: err.path });
+        scope.setContext('error object', { error: err });
+        if (err instanceof Error) {
+          Sentry.captureException(err);
+        } else {
+          Sentry.captureException(new Error(err.message));
+        }
+      });
+
+      return err;
     },
     plugins: [
       ApolloServerPluginDrainHttpServer({ httpServer }),
