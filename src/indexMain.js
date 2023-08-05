@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
-import express from 'express';
 import http from 'node:http';
+import express from 'express';
 import cors from 'cors';
 import debug from 'debug';
 
