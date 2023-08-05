@@ -1,16 +1,6 @@
 /* eslint-disable import/no-unresolved */
 import debug from 'debug';
-
-let version;
-(async () => {
-  let p;
-  try {
-    p = await import('./package.json');
-  } catch {
-    p = await import('../package.json');
-  }
-  version = p.version;
-})();
+import { version } from './package.json';
 
 const defaultVersion = `that-api-gateway@${version}`;
 const dlog = debug('that:api:gateway:config');

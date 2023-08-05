@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
-import express from 'express';
 import http from 'node:http';
+import express from 'express';
 import cors from 'cors';
 import debug from 'debug';
 
@@ -67,9 +67,26 @@ function createUserContext(req, res, next) {
   next();
 }
 
+function getVersion(isAllApis = false) {
+  // if isAllApis then make requests to children for their versions
+  return (req, res) => {
+    dlog(
+      'method %s, defaultVersion %s, isAllApis %s',
+      req.method,
+      config.sentry.release,
+      isAllApis,
+    );
+    return res.json({ version: config?.sentry?.release });
+  };
+}
+
 function failure(err, req, res, next) {
   dlog('middleware error %O', err);
-  Sentry.captureException(err);
+  if (err instanceof Error) {
+    Sentry.captureException(err);
+  } else {
+    Sentry.captureException(new Error(err.message));
+  }
 
   res.status(500).json(err);
 }
@@ -80,6 +97,7 @@ const port = process.env.PORT || 8000;
 api.use(Sentry.Handlers.requestHandler());
 api.use(cors(), responseTime(), jsonBodyParser());
 api.use(createUserContext);
+api.use('/version', getVersion());
 
 graphServer
   .start()

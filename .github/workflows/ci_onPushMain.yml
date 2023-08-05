@@ -13,7 +13,7 @@ jobs:
       apiName: gateway
       isForDeploy: true
       branchName: ${{ github.ref_name }}
-      nodeVersion: 16
+      nodeVersion: 18
     secrets:
       SLACK_WEBHOOK_DEV_NOTIFICATIONS: ${{ secrets.SLACK_WEBHOOK_DEV_NOTIFICATIONS }}
 
@@ -43,7 +43,7 @@ jobs:
       - name: Use node.js 16x
         uses: actions/setup-node@v3
         with:
-          node-version: 16
+          node-version: 18
       - name: Push to Stellate
         run: |
           npm version
