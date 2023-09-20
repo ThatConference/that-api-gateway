@@ -5,8 +5,8 @@ scopes:
   AUTHENTICATED: header:Authorization
 rules:
   - description: Default cache config
-    maxAge: 1800
     swr: 2700
+    maxAge: 1800
     types:
       - Query
 
@@ -21,7 +21,7 @@ rules:
       MembersQuery:
         isProfileSlugTaken: true
       # communications  
-      CommunicationsQuery:
+      CommunicationsChecksQuery:
         check: true
 
   - description: don't cache these authenticated
@@ -39,6 +39,10 @@ rules:
       VotingQuery:
         isVotingOpen: true
       MeOrdersMutation: true
+      # communications
+      CommunicationsChecksQuery:
+        validateThatApiRequest: true
+
 
   - description: special Caboodle cache time
     swr: 120
