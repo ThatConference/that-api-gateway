@@ -36,12 +36,12 @@ jobs:
     needs: [build, deploy]
     steps:
       - name: Download Build Artifact
-        uses: actions/download-artifact@v1
+        uses: actions/download-artifact@v4
         with:
           name: tc-api
           path: __build__
       - name: Use node.js 16x
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: 20
       - name: Push to Stellate
