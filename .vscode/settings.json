@@ -19,6 +19,6 @@
   "peacock.affectActivityBar": false,
   "peacock.lightForegroundColor": "#000",
   "editor.codeActionsOnSave": {
-    "source.fixAll.eslint": true
+    "source.fixAll.eslint": "explicit"
   }
 }
