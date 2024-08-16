@@ -13,7 +13,7 @@ jobs:
       apiName: gateway
       isForDeploy: true
       branchName: ${{ github.ref_name }}
-      nodeVersion: 18
+      nodeVersion: 20
     secrets:
       SLACK_WEBHOOK_DEV_NOTIFICATIONS: ${{ secrets.SLACK_WEBHOOK_DEV_NOTIFICATIONS }}
 
@@ -29,7 +29,7 @@ jobs:
       GCLOUD_AUTH: ${{ secrets.GCLOUD_AUTH }}
       GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
       SLACK_WEBHOOK_DEV_NOTIFICATIONS: ${{ secrets.SLACK_WEBHOOK_DEV_NOTIFICATIONS }}
-  
+
   stellate:
     name: Push Stellate rules
     runs-on: ubuntu-latest
@@ -43,7 +43,7 @@ jobs:
       - name: Use node.js 16x
         uses: actions/setup-node@v3
         with:
-          node-version: 18
+          node-version: 20
       - name: Push to Stellate
         run: |
           npm version
@@ -55,10 +55,9 @@ jobs:
           CI: true
           HUSKY: 0
 
-
   notifications:
     name: Workflow notifications
-    needs: [build,deploy]
+    needs: [build, deploy]
     runs-on: ubuntu-latest
     steps:
       - name: Slack Notification
