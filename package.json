@@ -37,7 +37,7 @@
     "test:watch": "cross-env  jest --watchAll",
     "lint": "eslint 'src/**/*.js'",
     "validate": "concurrently npm:test npm:lint npm:build",
-    "prepare": "husky install"
+    "prepare": "husky"
   },
   "dependencies": {
     "@apollo/gateway": "^2.8.4",
